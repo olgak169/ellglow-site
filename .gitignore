@@ -1,3 +1,6 @@
 node_modules
 HOWTOS.md 
 .DS_Store
+dist
+.output
+.nuxt 
