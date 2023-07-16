@@ -1,0 +1,1 @@
+export { default } from "file:///Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/@nuxt/vite-builder/dist/runtime/vite-node.mjs"

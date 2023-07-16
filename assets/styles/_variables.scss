@@ -1,0 +1,296 @@
+/* Main colors ================================= */
+
+/**/
+$clr-primary-dark: #3d0017;
+$clr-primary: #c72462;
+$clr-secondary: #ff97ba;
+$clr-accent: #f2d3ff;
+
+/* Text color variables ================================= */
+
+/**/
+$clr-text-primary-30: var(--clr-primary-30);
+$clr-text-5: var(--clr-black);
+$clr-text-10: var(--clr-neutral-10);
+$clr-text-20: var(--clr-neutral-20);
+$clr-text-30: var(--clr-neutral-30);
+$clr-text-40: var(--clr-neutral-40);
+$clr-text-50: var(--clr-neutral-50);
+$clr-text-60: var(--clr-neutral-60);
+$clr-text-70: var(--clr-neutral-70);
+$clr-text-80: var(--clr-neutral-80);
+$clr-text-90: var(--clr-neutral-90);
+$clr-text-95: var(--clr-neutral-95);
+$clr-text-99: var(--clr-white);
+
+/* Box shadows ================================= */
+
+/**/
+$bg-radial: radial-gradient(60% 150% at 25% 25%, #f8e1ff 0%, #ff97ba 100%);
+$bg-linear: linear-gradient(100deg, #f8e1ff 17.47%, #ff97ba 84.49%);
+$shadow-primary: 26px 72px 30px hsla(328, 100%, 26%, 0.01),
+  14px 40px 26px hsla(328, 100%, 26%, 0.05), 6px 18px 19px hsla(328, 100%, 26%, 0.09),
+  2px 4px 10px hsla(328, 100%, 26%, 0.1), 1px 1px 1px hsla(328, 100%, 26%, 0.1);
+$bg_hero: radial-gradient(
+    circle at 69% 3%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 8%,
+    transparent 8%,
+    transparent 92%
+  ),
+  radial-gradient(
+    circle at 85% 72%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 8%,
+    transparent 8%,
+    transparent 92%
+  ),
+  radial-gradient(
+    circle at 43% 49%,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.03) 6%,
+    transparent 6%,
+    transparent 94%
+  ),
+  radial-gradient(
+    circle at 12% 98%,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.03) 6%,
+    transparent 6%,
+    transparent 94%
+  ),
+  radial-gradient(
+    circle at 37% 52%,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.03) 6%,
+    transparent 6%,
+    transparent 94%
+  ),
+  radial-gradient(
+    circle at 22% 59%,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.03) 6%,
+    transparent 6%,
+    transparent 94%
+  ),
+  radial-gradient(
+    circle at 25% 56%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 4%,
+    transparent 4%,
+    transparent 96%
+  ),
+  radial-gradient(
+    circle at 22% 79%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 4%,
+    transparent 4%,
+    transparent 96%
+  ),
+  radial-gradient(
+    circle at 80% 81%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 4%,
+    transparent 4%,
+    transparent 96%
+  ),
+  radial-gradient(
+    circle at 52% 16%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 4%,
+    transparent 4%,
+    transparent 96%
+  ),
+  linear-gradient(
+    100deg,
+    var(--clr-primary-90) 10%,
+    var(--clr-secondary-80) 50%,
+    var(--clr-primary-95) 100%
+  );
+
+/* Border radius ================================= */
+
+/**/
+
+$b_rad_large: 10px;
+$b_rad_small: 5px;
+
+$border: 1px solid #900; // Dev only !!
+
+/* Break points ================================= */
+
+/**/
+$break_p__s: 23.5rem;
+$break_p__md: 45rem;
+$break_p__lg: 63.75rem;
+$break_p__xl: 75.625rem;
+
+/* Media queries mixin ================================= */
+
+/**/
+@mixin breaks($breakpoint) {
+  @if $breakpoint==x-large {
+    @media only screen and (min-width: $break_p__xl) {
+      @content;
+    }
+  }
+  @if $breakpoint==large {
+    @media only screen and (min-width: $break_p__lg) {
+      @content;
+    }
+  }
+  @if $breakpoint==medium {
+    @media only screen and (min-width: $break_p__md) {
+      @content;
+    }
+  }
+  @if $breakpoint==small {
+    @media only screen and (min-width: $break_p__s) {
+      @content;
+    }
+  }
+}
+:root {
+  --max-width: 75.625rem; //1210px
+
+  /* Fluid font sizes ================================================== */
+
+  /**/
+  /* Step -2: 11.11px → 9.00px */
+  --step--2: clamp(0.56rem, calc(0.74rem + -0.23vw), 0.69rem);
+
+  /* Step -1: 13.33px → 12.00px */
+  --step--1: clamp(0.75rem, calc(0.86rem + -0.15vw), 0.83rem);
+
+  /* Step 0: 16.00px → 16.00px */
+  --step-0: clamp(1rem, calc(1rem + 0vw), 1rem);
+
+  /* Step 1: 19.20px → 21.33px */
+  --step-1: clamp(1.2rem, calc(1.15rem + 0.24vw), 1.33rem);
+
+  /* Step 2: 23.04px → 28.43px */
+  --step-2: clamp(1.44rem, calc(1.32rem + 0.6vw), 1.78rem);
+
+  /* Step 3: 27.65px → 37.90px */
+  --step-3: clamp(1.73rem, calc(1.5rem + 1.14vw), 2.37rem);
+
+  /* Step 4: 33.18px → 50.52px */
+  --step-4: clamp(2.07rem, calc(1.69rem + 1.93vw), 3.16rem);
+
+  /* Step 5: 39.81px → 67.34px */
+  --step-5: clamp(2.49rem, calc(1.88rem + 3.06vw), 4.21rem);
+
+  /* Fluid space sizes ==================================== */
+
+  /**/
+  --space-3xs: clamp(0.25rem, calc(0.23rem + 0.11vw), 0.31rem);
+  --space-2xs: clamp(0.5rem, calc(0.48rem + 0.11vw), 0.56rem);
+  --space-xs: clamp(0.75rem, calc(0.71rem + 0.22vw), 0.88rem);
+  --space-s: clamp(1rem, calc(0.96rem + 0.22vw), 1.13rem);
+  --space-m: clamp(1.5rem, calc(1.43rem + 0.33vw), 1.69rem);
+  --space-l: clamp(2rem, calc(1.91rem + 0.44vw), 2.25rem);
+  --space-xl: clamp(3rem, calc(2.87rem + 0.67vw), 3.38rem);
+  --space-2xl: clamp(4rem, calc(3.82rem + 0.89vw), 4.5rem);
+  --space-3xl: clamp(6rem, calc(5.74rem + 1.33vw), 6.75rem);
+  --space-5xl: clamp(10.13rem, calc(9.73rem + 1.96vw), 11.25rem);
+  --space-10xl: clamp(20.25rem, calc(19.47rem + 3.91vw), 22.5rem);
+
+  /* One-up space pairs */
+  --space-3xs-2xs: clamp(0.25rem, calc(0.14rem + 0.56vw), 0.56rem);
+  --space-2xs-xs: clamp(0.5rem, calc(0.37rem + 0.67vw), 0.88rem);
+  --space-xs-s: clamp(0.75rem, calc(0.62rem + 0.67vw), 1.13rem);
+  --space-s-m: clamp(1rem, calc(0.76rem + 1.22vw), 1.69rem);
+  --space-m-l: clamp(1.5rem, calc(1.24rem + 1.33vw), 2.25rem);
+  --space-l-xl: clamp(2rem, calc(1.52rem + 2.45vw), 3.38rem);
+  --space-xl-2xl: clamp(3rem, calc(2.47rem + 2.67vw), 4.5rem);
+  --space-2xl-3xl: clamp(4rem, calc(3.03rem + 4.89vw), 6.75rem);
+
+  /* Custom space pairs */
+  --space-s-l: clamp(1rem, calc(0.56rem + 2.22vw), 2.25rem);
+  --space-s-3xs: clamp(0.31rem, calc(1.24rem + -1.22vw), 1rem);
+}
+
+:root {
+  /* Colors ================================= */
+
+  /**/
+  --clr-white: hsl(225, 100%, 99%);
+  --clr-black: hsl(214, 58%, 8%);
+  /* Palette ================================= */
+
+  /**/
+
+  --clr-primary-5: hsl(339, 100%, 8%);
+  --clr-primary-10: hsl(337, 100%, 12%);
+  --clr-primary-20: hsl(334, 100%, 20%);
+  --clr-primary-25: hsl(333, 100%, 24%);
+  --clr-primary-30: hsl(333, 100%, 28%);
+  --clr-primary-35: hsl(333, 100%, 32%);
+  --clr-primary-40: hsl(335, 81%, 40%);
+  --clr-primary-50: hsl(339, 68%, 53%);
+  --clr-primary-60: hsl(340, 97%, 65%);
+  --clr-primary-70: hsl(344, 100%, 76%);
+  --clr-primary-80: hsl(347, 100%, 85%);
+  --clr-primary-85: hsl(347, 100%, 89%);
+  --clr-primary-90: hsl(349, 100%, 93%);
+  --clr-primary-95: hsl(351, 100%, 96%);
+  --clr-primary-98: hsl(7, 100%, 98%);
+  --clr-primary-99: hsl(300, 100%, 99%);
+
+  /**/
+
+  --clr-secondary-5: #2b0013;
+  --clr-secondary-10: #3e001e;
+  --clr-secondary-20: #5e1133;
+  --clr-secondary-25: #6c1d3e;
+  --clr-secondary-30: #7b294a;
+  --clr-secondary-35: #893456;
+  --clr-secondary-40: #984062;
+  --clr-secondary-50: #b6587b;
+  --clr-secondary-60: #d57194;
+  --clr-secondary-70: #f48baf;
+  --clr-secondary-80: hsl(341, 100%, 85%);
+  --clr-secondary-85: hsl(341, 100%, 88%);
+  --clr-secondary-90: #ffd9e2;
+  --clr-secondary-95: #ffecf0;
+  --clr-secondary-98: #fff8f8;
+  --clr-secondary-99: #fffbff;
+
+  /**/
+
+  --clr-accent-5: #200034;
+  --clr-accent-10: #30004b;
+  --clr-accent-20: #491866;
+  --clr-accent-25: #552572;
+  --clr-accent-30: #61317e;
+  --clr-accent-35: #6e3d8b;
+  --clr-accent-40: #7b4998;
+  --clr-accent-50: #9562b3;
+  --clr-accent-60: #b07ccf;
+  --clr-accent-70: #cd96eb;
+  --clr-accent-80: #e5b4ff;
+  --clr-accent-90: #f5d9ff;
+  --clr-accent-95: #fcebff;
+  --clr-accent-98: #fff7fc;
+  --clr-accent-99: #fffbff;
+
+  /**/
+
+  --clr-neutral-0: #000000;
+  --clr-neutral-5: #180e10;
+  --clr-neutral-10: #24191b;
+  --clr-neutral-20: #3a2d30;
+  --clr-neutral-25: #46383a;
+  --clr-neutral-30: #514346;
+  --clr-neutral-35: #5e4f51;
+  --clr-neutral-40: #6a5a5d;
+  --clr-neutral-50: #847376;
+  --clr-neutral-60: #9e8c8f;
+  --clr-neutral-70: #baa7a9;
+  --clr-neutral-80: #d6c2c4;
+  --clr-neutral-90: #f3dde0;
+  --clr-neutral-95: #ffecef;
+  --clr-neutral-98: #fff8f7;
+  --clr-neutral-99: #fffbff;
+  --clr-neutral-100: #ffffff;
+}

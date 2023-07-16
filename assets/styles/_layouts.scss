@@ -1,0 +1,46 @@
+@import 'variables';
+.content {
+  width: 100%;
+}
+.container {
+  width: 95%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  position: relative;
+}
+.flow > * + * {
+  margin-top: var(--flow-space, 1em);
+}
+
+.grid_container {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-column-gap: var(--space-m);
+  grid-row-gap: var(--space-m);
+  justify-items: var(--grid-block-align), stretch;
+  align-items: var(--grid-inline-align), stretch;
+  @include breaks(large) {
+    grid-template-columns: 1fr 30%;
+    grid-template-rows: 100%;
+  }
+}
+
+.base-grid {
+  display: grid;
+  gap: var(--grid-gutter, 1em);
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--flex-gap, var(--space-s));
+  justify-content: var(--flex-inline-align, flex-start);
+  align-items: var(--flex-block-align, center);
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flex-gap, var(--space-s));
+  justify-content: var(--flex-block-align, flex-start);
+  align-items: var(--flex-inline-align, center);
+}

@@ -1,0 +1,44 @@
+@import 'variables';
+.hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  @include breaks(large) {
+    min-height: 40rem;
+  }
+}
+.svg_bg_pattern {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: auto;
+  max-width: unset;
+  z-index: -1;
+  @include breaks(medium) {
+    height: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.hero_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-m-l);
+  width: 90%;
+  max-width: var(--max-width);
+  margin: 0 auto 0 auto;
+  padding: 10rem 0 2rem 0;
+
+  & > * {
+    flex: 1;
+  }
+  @include breaks(large) {
+    flex-direction: row;
+    padding: 10rem 0 3rem 0;
+  }
+}

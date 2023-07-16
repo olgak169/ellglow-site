@@ -1,0 +1,53 @@
+@import 'variables';
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  text-rendering: optimizeSpeed;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--clr-white);
+  color: var(--clr-black);
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.6;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    display: none;
+    background-color: transparent;
+  }
+  &.modal {
+    overflow: hidden;
+    &::after {
+      display: block;
+      background-color: rgba($color: #000000, $alpha: 0.4);
+    }
+  }
+}
+#__nuxt {
+  height: 100%;
+}
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.hidden {
+  display: none !important;
+}

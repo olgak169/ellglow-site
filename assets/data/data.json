@@ -1,0 +1,747 @@
+{
+  "homePage": {
+    "heroText": [
+      "We are professional beauty salon in the heart of Orange county. We specialize in a wide range of face treatments and other complimentary beauty services.",
+      "At EllGlow we source latest innovations, products and devices for your beauty and aesthetic needs.",
+      "You're guaranteed to leave EllGlow looking your best possible self!"
+    ],
+    "benefits": [
+      {
+        "title": "Expertise & professionalism",
+        "text": "We are a small team of certified professionals that are experts in the beauty industry. With years of experience and up-to-date knowledge, we provide top-notch services that meet your unique beauty needs. Trust us for exceptional results every time."
+      },
+      {
+        "title": "Personalized approach",
+        "text": "We understand that you're unique and have specific preferences. At EllGlow we take the time to listen, assess your needs, and offer tailored treatments. With every treatment, we aim to exceed your expectations and leave you feeling pampered and confident."
+      },
+      {
+        "title": "High end products",
+        "text": "We believe in using the best. That's why we only use high-quality products from trusted brands. With our expertise and top-notch products, we offer a luxurious and indulgent experience that leaves you looking and feeling your best."
+      },
+      {
+        "title": "Serene ambiance",
+        "text": "At EllGlow you can escape the stress of everyday life and immerse yourself in a serene ambiance. Our inviting salon provides a peaceful and relaxing environment, allowing you to unwind and indulge in a moment of blissful self-care. Experience a soothing atmosphere that enhances your overall wellbeing while we work our magic on your skin."
+      }
+    ],
+    "reviews": [
+      {
+        "id": 0,
+        "text": "I am beyond satisfied with the service provided by Elle. She did an amazing job on my facial. Very good communication she informed me of each product that was used. She's very knowledgeable and friendly. I definitely recommend her services.",
+        "name": "Sharmine"
+      },
+
+      {
+        "id": 1,
+        "text": "Absolutely wonderful, no matter what treatment I have had I always feel like a queen when I leave. Everyone is professional and accommodating.",
+        "name": "Kathryn"
+      },
+      {
+        "id": 2,
+        "text": "I don't know why it took me this long to get a facial because it was AMAZING. Elle did an outstanding job. From start to finish it was flawless. She was very kind, and knowledgeable of what she was doing. I highly recommend the aesthetics program & booking with Elle. I will be back to see her very soon!!",
+        "name": "Helen Ross"
+      },
+      {
+        "id": 3,
+        "text": "Elle asked me different kinds of questions to accurately categorise my skin type and which products will help me with my acne. Will def be back. Elle took care of all my needs, her hands are healing! Felt relaxed the entire time. The Glycolic peel was my favourite addition. Awesome, keep it up, going to recommend them to all my family!",
+        "name": "Jessica"
+      },
+      {
+        "id": 4,
+        "text": "What an amazing experience, in preperation for my flight abroad and I highly recommend it. I will definitely be back.",
+        "name": "Ann"
+      },
+      {
+        "id": 5,
+        "text": "I went in for a facial with Elle and I loved it. She was very professional and would communicate and explain to me what she was going to do. I felt so relaxed and really enjoyed my facial with her. My skin felt great after and I would for sure go back with Elle for another facial.",
+        "name": "Tish"
+      }
+    ]
+  },
+  "aboutPage": {
+    "textContent": [
+      "EllGlow Beauty, founded by the esteemed professional Elle Rice, is a distinguished European Skin & Hair Studio nestled in the heart of Orange County. With a profound passion for providing an exceptional experience, Elle ensures that each client receives personalized care and attention.",
+      "Driven by an unwavering commitment to detail, Elle's expertise lies in solving complex skin and hair concerns, leaving her clients looking and feeling their absolute best. At EllGlow, our mission is to understand the unique needs of every individual and develop a tailored, caring approach to achieve targeted results.",
+      "Immerse yourself in our inviting and tranquil atmosphere, meticulously designed with your comfort in mind. As you step into our studio, you embark on a journey where beauty meets relaxation, where personalized care meets exceptional results.",
+      "At EllGlow Beauty, we pride ourselves on staying at the forefront of the industry. Our dedicated team passionately strives to provide you with the latest, safest, and most innovative technologies and products. We curate a selection of unique and effective solutions tailored to meet the specific requirements of our esteemed clients.",
+      "Discover the EllGlow difference as we work hand in hand to unveil your radiant skin and luscious hair. With unwavering dedication and attention to detail, our team is here to help you achieve your skincare and haircare goals. Experience the true essence of beauty at EllGlow Beauty, where excellence meets personalized care under the guidance of our founder, Elle Rice."
+    ],
+    "locationGallery": [
+      "location--001.jpg",
+      "location--002.jpg",
+      "location--003.jpg",
+      "location--004.jpg",
+      "location--005.jpg",
+      "location--006.jpg"
+    ],
+    "aboutGallery": [
+      "about--001.jpg",
+      "about--002.jpg",
+      "about--003.jpg",
+      "about--004.jpg",
+      "about--005.jpg",
+      "about--006.jpg"
+    ]
+  },
+  "servicesPage": {
+    "main": [
+      {
+        "id": "001",
+        "slug": "age-defyne",
+        "name": "Age defyne",
+        "process": [
+          "Thorough cleansing to remove impurities and prepare the skin. Application of specialized products to promote circulation and collagen production. Skillful massage techniques to stimulate the skin's natural rejuvenation processes. Targeted application of serums or treatment masks to address specific concerns. Finishing products to lock in moisture and protect the skin."
+        ],
+        "description": "Experience Age Defyne, our advanced treatment designed to improve circulation, boost collagen production, and visibly smooth fine lines and wrinkles, helping you achieve a youthful and rejuvenated appearance.",
+        "benefits": [
+          "Enhances circulation for improved skin health and vitality",
+          "Smoothes the appearance of fine lines and wrinkles, reducing visible signs of aging",
+          "Restores a youthful glow and revitalizes the complexion",
+          "Stimulates collagen production, promoting firmness and elasticity"
+        ],
+        "moreInfo": [
+          "At EllGlow, we take pride in introducing Age Defyne, our exceptional treatment meticulously designed to combat the signs of aging and restore a radiant, youthful appearance to your skin.",
+          "Through a harmonious blend of innovative techniques and carefully curated products, Age Defyne specifically targets key areas to improve circulation, boost collagen production, and visibly smooth fine lines and wrinkles.",
+          "By enhancing circulation, this treatment promotes optimal skin health and vitality, forming a solid foundation for a youthful complexion that glows from within. The stimulation of collagen production enhances skin firmness and elasticity, diminishing the appearance of sagging and creating a more lifted, rejuvenated look. Fine lines and wrinkles are visibly softened, revealing a smoother and more refined appearance.",
+          "Unleash the transformative power of Age Defyne as it revitalizes your complexion, restoring a luminous and youthful version of yourself."
+        ],
+        "price": [80],
+        "duration": [30],
+        "packageInfo": [],
+        "img": ["service-img--age-defyne.jpg"]
+      },
+      {
+        "id": "002",
+        "slug": "microcurrent",
+        "name": "Microcurrent",
+        "process": [
+          "Gentle cleansing to remove impurities and prepare the skin. Application of conductive gel to facilitate microcurrent penetration. Microcurrent device is used to deliver targeted electrical stimulation to the facial muscles. Massage and lymphatic drainage techniques are incorporated for enhanced relaxation and detoxification. Application of hydrating mask and finishing products to nourish and protect the skin."
+        ],
+        "description": "Experience the rejuvenating power of Microcurrent therapy, a non-invasive treatment that utilizes low-level electrical currents to stimulate facial muscles, tighten skin, and promote a youthful appearance",
+        "benefits": [
+          "Muscle re-education",
+          "Better product penetration",
+          "Increased natural production of collagen and elastin",
+          "Increase in protein synthesis",
+          "Lifts and tones facial muscles for a more sculpted look"
+        ],
+        "moreInfo": [
+          "Discover the transformative benefits of our Microcurrent treatment. This cutting-edge therapy harnesses the power of low-level electrical currents to rejuvenate your skin from within. As the microcurrent is applied, it gently stimulates the underlying facial muscles, promoting a natural lift and tone.",
+          "The increased circulation revitalizes the complexion, leaving your skin with a healthy, radiant glow. By promoting collagen and elastin production, this treatment helps to diminish the appearance of fine lines and wrinkles, resulting in a smoother, more youthful complexion.",
+          "Additionally, the microcurrent enhances the absorption of skincare products, allowing their active ingredients to penetrate deeper into the skin for optimal results. Say goodbye to surgical facelifts and embrace the non-invasive, no-downtime solution offered by our Microcurrent treatment.",
+          "Microcurrent facials increase cellular activity by helping to tighten and smoothen the muscles and connective tissues of the face.",
+          "Microcurrent facial at Ell Glow offers powerful and effective tool to aid in the battle of anti-aging by diminishing the appearance of the dull skin, and reducing the overall visual appearance of aging.The mild electrical pulses stimulate your facial muscles, and create a more toned and lifted appearance with regular use, just like a sculpting gym workout for your face. Microcurrent's main benefits go far beyond that of just a lift: it also boosts blood circulation, enhances penetration of skincare products, and stimulates collagen and elastin production. Additionally, it stimulates ATP( adenosine triphosphate), which is essentially muscle energy."
+        ],
+        "price": [115],
+        "duration": [50],
+        "packageInfo": [],
+        "img": ["service-img--microcurrent.jpg", "slogan--001.jpg"]
+      },
+      {
+        "id": "003",
+        "slug": "facial-massage",
+        "name": "Facial massage",
+        "process": [
+          "Gentle cleansing, application of nourishing massage oil, a series of specialized massage techniques targeting the face, neck, and décolletage, lymphatic drainage movements, and application of finishing products to nourish and protect the skin."
+        ],
+        "description": "Indulge in our rejuvenating Facial Massage, a luxurious treatment that combines therapeutic techniques to relax the mind, relieve tension, and enhance the overall health and appearance of your skin.",
+        "benefits": [
+          "Promotes deep relaxation, reducing stress and anxiety",
+          "Stimulates blood circulation, delivering vital nutrients to the skin",
+          "Relieves muscle tension, promoting a more youthful and relaxed appearance",
+          "Improves lymphatic drainage, detoxifying the skin and reducing puffiness",
+          "Enhances absorption of skincare products, maximizing their effectiveness"
+        ],
+        "moreInfo": [
+          "At EllGlow, we invite you to experience the ultimate relaxation and skin rejuvenation with our luxurious Facial Massage. This indulgent treatment combines therapeutic techniques with expert hands to provide a truly blissful experience.",
+          "From the moment the treatment begins, you will feel the stresses of the day melt away as gentle cleansing prepares your skin for the transformative journey ahead. Our skilled therapists then apply a nourishing massage oil and employ a series of specialized techniques to stimulate blood circulation, delivering a surge of vital nutrients and oxygen to the skin.",
+          "As muscle tension melts away, you will notice a visible improvement in your complexion, as a more relaxed and youthful appearance emerges.",
+          "The massage also promotes lymphatic drainage, helping to detoxify the skin, reduce puffiness, and reveal a radiant glow. Additionally, the facial massage enhances the absorption of skincare products, allowing their active ingredients to penetrate deeply and maximize their effectiveness.",
+          "Surrender to the soothing touch of our Facial Massage and emerge with a renewed sense of well-being and a complexion that exudes beauty and tranquility."
+        ],
+        "price": [80],
+        "duration": [30],
+        "packageInfo": [],
+        "img": ["service-img--facial-massage.jpg"]
+      },
+      {
+        "id": "004",
+        "slug": "deep-cleansing-manual-facial",
+        "name": "Deep cleansing manual facial",
+        "process": [
+          "Double cleansing with ultrasonic spatula, enzyme exfoliation,manual extraction of impurities, exfoliation to remove dead skin cells, calming mask application, toning, moisturizing, and application of finishing products."
+        ],
+        "description": "Experience the purifying effects of our Deep Cleansing Manual Facial, a comprehensive treatment designed to deeply cleanse, exfoliate, and clarify your skin, leaving it refreshed, rejuvenated, and free from impurities.",
+        "benefits": [
+          "Removes impurities, excess oil, and build-up for a clearer complexion",
+          "Exfoliates dead skin cells, promoting a smoother, more refined texture",
+          "Unclogs and minimizes the appearance of pores, improving skin clarity",
+          "Enhances product absorption, allowing for better effectiveness of subsequent skincare",
+          "Revitalizes dull-looking skin, revealing a brighter and more radiant complexion"
+        ],
+        "moreInfo": [
+          "Our Deep Cleansing Manual Facial at EllGlow is the ultimate solution to purify and revitalize your skin. This comprehensive treatment targets impurities, excess oil, and build-up, revealing a complexion that is fresh, clarified, and beautifully renewed.",
+          " The process begins with a thorough cleansing to remove surface impurities, preparing the skin for the transformative steps to follow. Gentle steam is then applied to open the pores, allowing for effective manual extraction of impurities, ensuring a deep cleanse. As dead skin cells are gently exfoliated away, your skin's texture becomes smoother and more refined, unveiling a renewed radiance",
+          " The treatment also works to unclog and minimize the appearance of pores, improving skin clarity and reducing the likelihood of breakouts. With each step, your skin is replenished with vital nutrients, ensuring optimal hydration and nourishment. Finally, a calming mask is applied to soothe and rejuvenate, leaving your complexion revitalized and glowing with newfound clarity.",
+          "Experience the transformative power of our Deep Cleansing Manual Facial and embrace a renewed sense of purity and radiance.",
+          "One treatment a month gives visible result."
+        ],
+        "price": [95],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--deep-cleansing-manual-facial.jpg", "slogan--002.jpg"]
+      },
+      {
+        "id": "005",
+        "slug": "mens-facial",
+        "name": "Men's facial",
+        "process": [
+          "Cleansing, exfoliation, steaming, extractions (if necessary), facial massage, customized mask, moisturizer, and sun protection."
+        ],
+        "description": "Experience the tailored care your skin deserves with our Men's Facial, a specialized treatment designed to address the unique skin concerns of men. Rejuvenate and revitalize your skin with this personalized approach that targets specific issues commonly faced by men.",
+        "benefits": [
+          "Deeply cleanses and purifies the skin, removing impurities and excess oil",
+          "Calms and soothes irritated skin, reducing redness and inflammation",
+          "Hydrates and nourishes the skin, promoting a healthy and refreshed appearance",
+          "Addresses common skin issues for men, such as razor burn, ingrown hairs, and rough texture.",
+          "Restores a youthful and vibrant complexion, boosting confidence and self-care."
+        ],
+        "moreInfo": [
+          "At EllGlow, we understand that men's skin requires specific attention and care. Our Men's Facial is thoughtfully designed to address the unique skin concerns that men often face, providing a rejuvenating and tailored experience.",
+          "The treatment begins with a thorough cleansing to rid the skin of impurities and excess oil, prepping it for the transformative steps ahead. A gentle exfoliation follows, effectively removing dead skin cells and revealing a smoother and healthier complexion. Steaming is then applied to open the pores, allowing for deep cleansing and optimal product absorption. If necessary, extractions are performed to address any stubborn blackheads or congestion. The facial massage that follows not only promotes relaxation but also stimulates blood circulation, aiding in skin revitalization. A customized mask is applied, specifically formulated to target common skin issues faced by men, such as razor burn, ingrown hairs, and rough texture. This specialized mask provides deep hydration and nourishment, leaving the skin looking and feeling revitalized. To seal in the benefits, a moisturizer and sun protection are applied, ensuring long-lasting hydration and safeguarding the skin from harmful UV rays.",
+          "Our Men's Facial not only addresses specific skin concerns but also restores a youthful and vibrant complexion, boosting confidence and promoting a sense of well-being.",
+          "Experience the personalized care your skin deserves with our Men's Facial."
+        ],
+        "price": [95],
+        "packageInfo": [],
+        "duration": [40],
+        "img": ["service-img--mens-facial.jpg"]
+      },
+      {
+        "id": "006",
+        "slug": "aqua-hydro-facial",
+        "name": "Aqua / Hydro facial",
+        "process": [
+          "Gentle cleansing, gentle exfoliation, customized infusion of nourishing serums and hydrating solutions, extraction (optional), application of targeted treatment masks, moisturizer, and sun protection."
+        ],
+        "description": "Immerse your skin in the ultimate hydration experience with our Aqua/Hydro Facial. This customizable treatment deeply nourishes and rejuvenates the skin, leaving it intensely hydrated and radiant, regardless of your skin type.",
+        "benefits": [
+          "Provides deep hydration, replenishing moisture for a plump and supple complexion",
+          "Improves skin texture and tone, promoting a smooth and even appearance",
+          "Reduces the appearance of fine lines and wrinkles, enhancing overall youthfulness",
+          "Enhances the absorption of skincare products, maximizing their effectiveness",
+          "Tailored to address specific skin concerns, making it suitable for all skin types"
+        ],
+        "moreInfo": [
+          "Indulge in the ultimate hydration experience with our Aqua/Hydro Facial at EllGlow. This remarkable treatment immerses your skin in a deeply nourishing and rejuvenating journey, restoring optimal moisture levels and unveiling a complexion that radiates with vitality. Through a customized approach, the Aqua/Hydro Facial is designed to cater to your specific skin needs, making it suitable for all skin types.",
+          " The treatment begins with a gentle cleansing to remove impurities and prepare the skin for the infusion of hydration to follow. A gentle exfoliation refines the skin's texture and promotes a smooth and even appearance. The true magic lies in the customized infusion of nourishing serums and hydrating solutions, which are carefully selected based on your skin's unique requirements. These potent ingredients penetrate deeply, replenishing moisture levels and leaving your skin plump, supple, and intensely hydrated. Fine lines and wrinkles are visibly diminished, enhancing overall youthfulness.",
+          "As the Aqua/Hydro Facial promotes enhanced absorption, your subsequent skincare products become more effective, further enhancing their benefits.",
+          "Whether your skin needs a boost of hydration, improved texture, or overall rejuvenation, our Aqua/Hydro Facial is tailored to address your specific concerns. Step out with a radiant complexion that exudes health, hydration, and natural beauty.",
+          "Recommended once a month.",
+          "No lengthy recovery - VISIBLE RESULT"
+        ],
+        "price": [140],
+        "duration": [50],
+        "packageInfo": ["Package of 5 sessions — $600 ($100 OFF)"],
+        "img": ["service-img--aqua-hydro-facial.jpg", "slogan--002.jpg"]
+      },
+      {
+        "id": "007",
+        "slug": "chemical-peel",
+        "name": "Chemical peel",
+        "process": [
+          "Cleansing of the skin, application of chemical peel solution, customized based on skin type and concerns, neutralization of the peel, soothing mask application, application of targeted serums, moisturizer, and sun protection."
+        ],
+        "description": "Unveil a smoother, more radiant complexion with our transformative Chemical Peel treatment. This professional exfoliation technique targets various skin concerns, revealing renewed skin that is youthful, refreshed, and beautifully rejuvenated.",
+        "benefits": [
+          "Exfoliates the skin, removing dead skin cells and promoting cellular turnover",
+          "Improves skin tone and texture, minimizing the appearance of imperfections",
+          "Reduces the visibility of fine lines, wrinkles, and age spots",
+          "Stimulates collagen production, promoting a firmer and more elastic skin",
+          "Enhances overall skin clarity and radiance"
+        ],
+        "moreInfo": [
+          "At EllGlow, we invite you to experience the transformative effects of our Chemical Peel treatment, designed to uncover a smoother, more radiant complexion.",
+          "This professional exfoliation technique targets a range of skin concerns, from uneven skin tone and texture to the visible signs of aging. The treatment begins with a thorough cleansing of the skin, ensuring it is free from impurities. A carefully selected chemical peel solution is then applied, tailored to your specific skin type and concerns. The peel works to gently exfoliate the outermost layer of the skin, effectively removing dead skin cells and stimulating cellular turnover. As a result, you will notice improved skin tone and texture, with reduced appearance of imperfections such as fine lines, wrinkles, and age spots.",
+          "The Chemical Peel also triggers the production of collagen, a vital protein that promotes a firmer, more elastic skin. Your skin's overall clarity and radiance are enhanced, revealing a rejuvenated and refreshed complexion.",
+          "To conclude the treatment, a soothing mask is applied to calm and nourish the skin, followed by the application of targeted serums, moisturizer, and sun protection to maintain and protect the skin's newfound glow.",
+          "Embrace the transformative power of our Chemical Peel and unveil a youthful, luminous complexion",
+          "Our peels are also available as add-ons to your chosen treatment.",
+          "Please see add-ons section for prices and descriptions."
+        ],
+        "price": [95],
+        "packageInfo": [],
+        "duration": [30],
+        "img": ["service-img--chemical-peel.jpg"]
+      },
+      {
+        "id": "008",
+        "slug": "high-frequency-acne-treatment",
+        "name": "High frequency + Acne treatment",
+        "process": [
+          "Thorough cleansing, high-frequency treatment targeting acne-prone areas, application of specialized serums, soothing mask, moisturizer, and sun protection."
+        ],
+        "description": "Experience the powerful combination of High Frequency and Acne Treatment, a cutting-edge solution that utilizes advanced light frequencies to specifically target acne-causing bacteria and reduce inflammation, resulting in clearer and healthier skin.",
+        "benefits": [
+          "Destroys acne-causing bacteria, effectively addressing the root cause of breakouts",
+          "Reduces inflammation and redness associated with acne, promoting a calmer complexion",
+          "Improves the overall appearance of active acne, leading to a clearer and more even skin tone",
+          "Enhances the healing process, accelerating the recovery of blemishes and preventing future scarring",
+          "Customizable treatment tailored to individual skin concerns and needs"
+        ],
+        "moreInfo": [
+          "At EllGlow, we introduce you to the revolutionary combination of High Frequency and Acne Treatment, a scientifically advanced solution designed to combat acne at its source. This cutting-edge treatment harnesses the power of specific light frequencies to effectively target acne-causing bacteria and reduce inflammation, resulting in a clearer and healthier complexion.",
+          "Acne, often caused by the overactivity of sebaceous glands and the presence of P. acne bacteria, can lead to the development of blackheads, whiteheads, and inflammatory lesions.",
+          "Our High Frequency + Acne Treatment utilizes a combination of blue and red light frequencies, each with its own distinct benefits. The blue light specifically targets and destroys acne-causing bacteria within the oil glands, helping to eliminate the root cause of breakouts. Simultaneously, the red light works to reduce inflammation and redness associated with active acne, promoting a calmer and more balanced complexion. This powerful duo not only improves the appearance of existing acne but also enhances the healing process, allowing blemishes to fade faster and minimizing the risk of scarring.",
+          "The treatment is fully customizable, allowing our skilled professionals to tailor the approach to address individual skin concerns and needs. After a thorough cleansing, the high-frequency treatment is applied to target acne-prone areas, followed by the application of specialized serums to further enhance the treatment's effectiveness. A soothing mask is then applied to calm and nourish the skin, concluding with the application of a moisturizer and sun protection to maintain the health and vitality of your newly improved complexion.",
+          "Experience the science-backed power of our High Frequency + Acne Treatment and embrace a clearer, more confident you.",
+          "Recommended once per week for a course of treatment."
+        ],
+        "price": [95],
+        "packageInfo": [
+          "Acne treatment back  - 50 min  - $110",
+          "Acne treatment face and back - 90 min  - $190"
+        ],
+        "duration": [50],
+        "img": ["service-img--high-frequency-acne-treatment.jpg", "slogan--003.jpg"]
+      },
+      {
+        "id": "009",
+        "slug": "microdermabrasion",
+        "name": "Microdermabrasion",
+        "process": [
+          "Cleansing, microdermabrasion treatment, application of hyaluronic acid serum, moisturizer, and sun protection."
+        ],
+        "description": "Experience the transformative effects of Microdermabrasion, a highly effective treatment that utilizes micro-current technology to ionize hyaluronic acid molecules, deeply infusing them into the skin. Enjoy instant and visible results, revealing a revitalized and radiant complexion.",
+        "benefits": [
+          "Exfoliates the outermost layer of the skin, promoting cell turnover and revealing a fresh, youthful glow",
+          "Enhances the absorption of hyaluronic acid, deeply hydrating the skin for a plumper and smoother appearance",
+          "Diminishes the appearance of fine lines, wrinkles, and superficial scars",
+          "Improves skin texture and tone, resulting in a more even and refined complexion",
+          "Provides immediate results, leaving your skin instantly rejuvenated and revitalized"
+        ],
+        "moreInfo": [
+          "Discover the remarkable benefits of Microdermabrasion at EllGlow, a treatment that harnesses the power of micro-current technology to rejuvenate your skin from within. This highly effective procedure exfoliates the outermost layer of the skin, revealing a fresh and youthful complexion that radiates with vitality.",
+          " The treatment begins with a thorough cleansing to ensure the skin is prepared for the transformative steps to follow. Through the use of micro-current technology, hyaluronic acid molecules are ionized, enabling them to penetrate deeply into the skin. Hyaluronic acid, known for its exceptional hydrating properties, plumps and smoothes the skin, resulting in a more youthful and supple appearance. Fine lines, wrinkles, and superficial scars are visibly diminished, while the overall texture and tone of the skin are improved, creating a more even and refined complexion",
+          "One of the remarkable aspects of Microdermabrasion is its ability to provide instant results. Following the treatment, you will immediately notice a revitalized and rejuvenated appearance, as your skin reflects a healthy radiance. To complete the process, a nourishing hyaluronic acid serum is applied, followed by a moisturizer and sun protection to maintain and prolong the benefits of the treatment.",
+          "Experience the transformative power of Microdermabrasion and embrace a revitalized and radiant complexion that exudes confidence and beauty.",
+          "Also available as an add-on to your main treatment."
+        ],
+        "price": [80, 110],
+        "packageInfo": ["Packages of 5 sessions - $450 (100 OFF)"],
+        "duration": [30, 50],
+        "img": ["service-img--microdermabrasion.jpg"]
+      },
+      {
+        "id": "010",
+        "slug": "fresh-and-glow",
+        "name": "Fresh and glow",
+        "process": [
+          "Double cleansing, enzyme exfoliation, ultrasonic, serum mesotherapy treatment, light manual extraction,gentle massage, specialized mask, moisturizer, and sun protection."
+        ],
+        "description": "Experience the rejuvenating effects of Fresh and Glow, a non-needle mesotherapy treatment designed to revive your skin's natural radiance. Suitable for all skin types, this innovative procedure delivers immediate results, leaving you with a fresh and glowing complexion.",
+        "benefits": [
+          "Revitalizes the skin, restoring its natural radiance and vibrancy",
+          "Boosts hydration, plumping and smoothing the skin for a youthful appearance",
+          "Improves skin tone and texture, minimizing the appearance of imperfections",
+          "Enhances collagen and elastin production, promoting a firmer and more elastic skin",
+          "Suitable for all skin types, offering a tailored solution for your individual needs"
+        ],
+        "moreInfo": [
+          "At EllGlow, we invite you to indulge in the transformative experience of Fresh and Glow, a remarkable non-needle mesotherapy treatment that will revive your skin's natural radiance. This innovative procedure is designed to address a variety of skin concerns, from dullness and dehydration to uneven tone and texture.",
+          "Fresh and Glow works by delivering a potent blend of active ingredients directly into the skin, stimulating cellular regeneration and revitalizing the complexion from within. The treatment begins with a thorough cleansing to prepare the skin for optimal absorption of the specialized mesotherapy solution.",
+          "This gentle and effective solution is applied to the skin, penetrating deep into the dermal layers to deliver a surge of revitalizing nutrients. A soothing and invigorating massage is then performed, promoting circulation and enhancing the treatment's effectiveness. To further enhance the results, a specialized mask is applied, targeting specific skin concerns and providing additional nourishment and hydration. As the treatment concludes, a moisturizer and sun protection are applied to safeguard the skin and maintain its newfound radiance.",
+          "Fresh and Glow is suitable for all skin types, as it offers a tailored solution to address your individual needs and concerns. The immediate results will leave you with a fresh and glowing complexion that radiates health and vitality.",
+          "Rediscover your skin's natural beauty with Fresh and Glow."
+        ],
+        "price": [95],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--fresh-and-glow.jpg", "slogan--004.jpg"]
+      },
+      {
+        "id": "011",
+        "slug": "oxygen-facial",
+        "name": "Oxygen facial",
+        "process": [
+          "Cleansing, oxygen infusion with vitamin-rich serum, gentle massage, customized mask, moisturizer, and sun protection."
+        ],
+        "description": "Experience the revitalizing benefits of Oxygen Facial, a rejuvenating treatment that delivers oxygen infused with essential vitamins and nourishing ingredients deep into the skin. This treatment is designed to nourish your skin and promote collagen production. Unlock a radiant and refreshed complexion with this invigorating procedure.",
+        "benefits": [
+          "Enhances skin hydration, leaving it plump, supple, and well-nourished",
+          "Promotes collagen production, improving skin elasticity and reducing the appearance of fine lines and wrinkles",
+          "Provides a boost of oxygen to the skin cells, aiding in detoxification and revitalization",
+          "Improves overall skin texture, revealing a smoother and more even complexion",
+          "Restores a youthful glow, leaving you with a radiant and refreshed appearance"
+        ],
+        "moreInfo": [
+          "At EllGlow, we invite you to experience the rejuvenating effects of our Oxygen Facial, a treatment that breathes new life into your skin.",
+          " This invigorating procedure harnesses the power of oxygen, infused with a carefully curated blend of vitamins and beneficial ingredients, to deeply nourish and revitalize your complexion. The treatment begins with a thorough cleansing to prepare the skin for the oxygen infusion. Oxygen, known for its revitalizing properties, is delivered directly to the skin cells, providing a surge of hydration and nourishment. This infusion stimulates collagen production, improving skin elasticity and diminishing the appearance of fine lines and wrinkles. As the oxygen penetrates the skin, it aids in detoxification, promoting a clearer and more radiant complexion.",
+          "The procedure also includes a gentle and relaxing massage, enhancing circulation and promoting lymphatic drainage. Following the massage, a customized mask is applied, targeting specific skin concerns and providing additional hydration and rejuvenation. To seal in the benefits, a moisturizer and sun protection are applied, ensuring the longevity of the results.",
+          "The Oxygen Facial is an ideal choice for those seeking to restore a youthful glow to their skin, as it leaves you with a refreshed and radiant appearance.",
+          "Discover the transformative power of oxygen and unlock the potential of your skin with our Oxygen Facial."
+        ],
+        "price": [140],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--oxygen-facial.jpg"]
+      },
+      {
+        "id": "012",
+        "slug": "acne-treatment",
+        "name": "Acne treatment",
+        "process": [
+          "Double cleansing with ultrasonic spatula, enzyme exfoliation, extra-extraction, toner, high frequency treatment, light massage, clay mask, moisturizer SPF / night cream,  eye cream, lip balm"
+        ],
+        "description": "Innovative acne treatment fights the causes of acne with light frequencies to target bacteria and inflammation.",
+        "benefits": [
+          "Improves active acne",
+          "Reduces inflammation and bacteria",
+          "Safe and visible result",
+          "No downtime",
+          "Healthy clear skin"
+        ],
+        "moreInfo": [
+          "The technology uses a light-based system to treat both the cause and the visible symptoms of acne.",
+          "Contrary to what a lot of people think, acne is not limited to just adolescence. In fact, many people struggle with acne on the face and body well into their adult life. Unfortunately, acne continues to be one of the most common scarring problems doctors see. Acne is usually caused by overactive sebaceous gland that produce too much oil and clog pores.",
+          "Combined with the presence of P. acne bacteria, this is what leads to the blackheads, and inflammation associated with acne.",
+          "The innovative technology as High Frequency treats both the underlining cause and the visible symptoms of acne.",
+          "It uses a combination of blue and red light delivered simulations — the blue light destroys acne-causing bacteria in the oil glands, while the red light reduces existing acne-related inflammation to promote faster healing.",
+          "Research has shown that when blue and red light are administers together, the results are much better than with just one light alone.",
+
+          "Enjoy smoother skin with a more even tone",
+
+          "No downtime — resume regular activities immediately",
+
+          "Customized treatment for maximum result — clear youthful radiant skin",
+          "LYMPHATIC DRAINAGE",
+          "VISIBLE RESULT",
+          "TAILORED FOR YOUR SKIN",
+
+          "1 PER WEEK FOR A COURSE OF TREATMENTS"
+        ],
+        "price": [95],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--acne-treatment.jpg", "slogan--005.jpg"]
+      },
+
+      {
+        "id": "013",
+        "slug": "european-facial",
+        "name": "European facial",
+        "process": [
+          "Triple cleanse,  advanced Environ products used to get dead skin cells off the top layer of the skin with a gentle orbital microdermabrasion, gently revealing, fresh, plump healthy skin. Extractions are performed followed by a deeply nourishing and hydrating hyaluronic acid mask infusion using the micro-current to ionize the molecules and push them further into the skin."
+        ],
+        "description": "Indulge in the ultimate pampering experience with our European Facial, a luxurious treatment that combines advanced manual techniques with high-end products. Experience instant results as your skin is rejuvenated and pampered to perfection.",
+        "benefits": [
+          "Deeply cleanses and purifies the skin, removing impurities and unclogging pores",
+          "Nourishes and hydrates the skin, restoring a healthy and radiant complexion",
+          "Improves skin texture and tone, promoting a smoother and more even appearance",
+          "Reduces the signs of aging, minimizing the appearance of fine lines and wrinkles",
+          "Provides an instant glow, leaving you with refreshed and revitalized skin"
+        ],
+        "moreInfo": [
+          "At EllGlow, we invite you to experience the epitome of luxury with our European Facial, a harmonious blend of advanced techniques and exquisite products.",
+          "This indulgent treatment is designed to cater to your skin's unique needs, providing an unparalleled experience of rejuvenation and relaxation.",
+          "The European Facial begins with a meticulous cleansing to remove impurities and prepare the skin for the transformative steps to follow. A gentle exfoliation is then performed, effectively sloughing away dead skin cells and promoting a renewed and radiant complexion. The highlight of the treatment is the facial massage, where skilled hands employ a variety of manual techniques to stimulate circulation, relieve tension, and promote lymphatic drainage. This soothing massage not only enhances relaxation but also aids in the absorption of the carefully selected products that follow. A customized mask is applied, targeting specific skin concerns and providing intense nourishment and hydration. As the mask works its magic, you'll feel a sense of tranquility enveloping you. To complete the experience, a moisturizer and sun protection are applied to seal in the benefits and protect your skin.",
+          "The European Facial is renowned for its ability to deliver instant results, leaving you with a renewed and revitalized complexion that radiates with a natural glow.",
+          " Treat yourself to the ultimate pampering session and discover the beauty of the European Facial."
+        ],
+        "price": [85],
+        "packageInfo": [],
+        "duration": [40],
+        "img": ["service-img--european-facial.jpg"]
+      },
+      {
+        "id": "014",
+        "slug": "mini-facial",
+        "name": "Mini facial",
+        "process": [
+          "Cleansing, enzyme exfoliation, toner, massage, mask, moisturizer SPF / night cream, eye cream, lip balm"
+        ],
+        "description": "Experience a quick and effective rejuvenation with our Mini Facial, a streamlined treatment that combines cleansing, exfoliation, and cell renewal in one efficient session. Achieve a refreshed and revitalized complexion in no time.",
+        "benefits": [
+          "Cleanses the skin, removing impurities and excess oil",
+          "Exfoliates dead skin cells, promoting a smoother and brighter appearance",
+          "Boosts cell renewal, encouraging a healthier and more youthful complexion",
+          "Provides a quick and convenient skincare solution for busy individuals",
+          "Leaves the skin feeling refreshed and rejuvenated"
+        ],
+        "moreInfo": [
+          "At EllGlow, we understand that your time is valuable. That's why we have created the Mini Facial, a condensed treatment that delivers maximum results in minimal time.",
+          "This quick and effective session is perfect for those seeking a convenient skincare solution without compromising on quality.",
+          "The Mini Facial begins with a thorough cleansing, removing impurities and excess oil to prepare the skin for the next steps. A gentle yet effective exfoliation follows, sloughing away dead skin cells and revealing a smoother and more radiant complexion. This step promotes cell renewal, encouraging healthier and more youthful-looking skin. To further enhance the skin's appearance and address specific concerns, a customized mask is applied. This nourishing mask provides hydration and additional benefits tailored to your skin's needs. Finally, a moisturizer and sun protection are applied to seal in the results and protect your skin from harmful UV rays.",
+          "The Mini Facial is the ideal choice for individuals on the go who desire a quick and efficient skincare boost.",
+          "Experience the transformative effects of a cleanse, exfoliation, and cell renewal in one convenient session with our Mini Facial."
+        ],
+        "price": [80],
+        "packageInfo": [],
+        "duration": [30],
+        "img": ["service-img--mini-facial.jpg", "slogan--006.jpg"]
+      },
+      {
+        "id": "015",
+        "slug": "led-light-treatment",
+        "name": "LED light treatment",
+        "process": [
+          "Cleanse, LED light therapy session, customized skincare products application. The facial includes a relaxing hand, arm and foot massage and is finished with a hydrating and skin softening Environ kaolin clay mask and shoulder massage."
+        ],
+        "description": "Experience the power of non-invasive light therapy with our LED Light Treatment, a rejuvenating and healing skincare solution. Harnessing the benefits of LED technology, this treatment enhances and heals the skin, promoting a radiant and revitalized complexion.",
+        "benefits": [
+          "Stimulates collagen production, reducing the appearance of fine lines and wrinkles",
+          "Improves skin tone and texture, promoting a smoother and more even complexion",
+          "Calms and soothes irritated skin, reducing redness and inflammation",
+          "Targets specific skin concerns, such as acne, hyperpigmentation, and uneven skin tone",
+          "Non-invasive and painless, with no downtime required"
+        ],
+        "moreInfo": [
+          "At EllGlow, we believe in harnessing the power of technology to enhance your skincare journey.",
+          "Our LED Light Treatment is a non-invasive and effective solution designed to rejuvenate and heal the skin.",
+          "LED technology has been scientifically proven to provide a wide range of benefits, making it a popular choice for achieving a radiant and revitalized complexion. The treatment begins with a thorough cleansing to prepare the skin for the LED light therapy session. During the session, specific wavelengths of light are applied to the skin, penetrating deep into the layers to stimulate collagen production and cellular rejuvenation. This process helps to reduce the appearance of fine lines and wrinkles, promoting a smoother and more youthful-looking complexion. LED light therapy also improves skin tone and texture, addressing concerns such as uneven pigmentation and dullness. Additionally, the treatment has a calming and soothing effect on the skin, reducing redness and inflammation for a more balanced and comfortable feel.",
+          "The LED Light Treatment is customized to target specific skin concerns, whether it's acne, hyperpigmentation, or uneven skin tone. The best part is that this treatment is non-invasive and painless, requiring no downtime.",
+          "After the LED light therapy session, customized skincare products are applied to further enhance the results and provide optimal nourishment for your skin.",
+          "Experience the transformative power of LED technology with our LED Light Treatment and discover a radiant and revitalized complexion."
+        ],
+        "price": [105],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--led-light-treatment.jpg"]
+      },
+      {
+        "id": "016",
+        "slug": "dermaplaning",
+        "name": "Dermaplaning",
+        "process": [
+          "Cleansing, dermaplaning treatment, soothing serum, moisturizer, and sun protection."
+        ],
+        "description": "Discover the power of Dermaplaning, a safe and effective treatment that gently removes peach fuzz and dead skin cells, instantly revealing a smoother and more radiant complexion. Experience this popular procedure without chemicals or lasers, just the precision of a sharp blade.",
+        "benefits": [
+          "Removes peach fuzz and unwanted facial hair, resulting in a smoother skin texture",
+          "Instantly exfoliates dead skin cells, promoting a brighter and more even complexion",
+          "Enhances the absorption of skincare products for improved effectiveness",
+          "Creates a smooth canvas for flawless makeup application",
+          "Non-invasive, safe, and suitable for all skin types"
+        ],
+        "moreInfo": [
+          "At EllGlow, we're excited to offer Dermaplaning, a highly sought-after treatment that delivers instant results for a smoother and more radiant complexion. ",
+          "Dermaplaning involves using a specialized scalpel to gently scrape away peach fuzz and dead skin cells from the surface of your face. This manual exfoliation technique is safe and effective, providing numerous benefits for your skin. During the procedure, there are no chemicals or lasers involved—just the precision of a sharp blade in the hands of our skilled professionals.",
+          "One of the key benefits of Dermaplaning is its ability to remove peach fuzz and unwanted facial hair. This results in a smoother skin texture and allows for a flawless makeup application. Additionally, the treatment instantly exfoliates dead skin cells, revealing a brighter and more even complexion. By removing this layer of dull skin, Dermaplaning enhances the absorption of skincare products, making them more effective. Imagine your favorite serums and moisturizers being able to penetrate deeper and provide optimal nourishment to your skin.",
+          "The Dermaplaning process is non-invasive and suitable for all skin types. It is a safe and gentle procedure that leaves your skin looking refreshed and rejuvenated. The treatment begins with a thorough cleansing of your face to ensure a clean canvas. Then, our skilled esthetician performs the dermaplaning technique, skillfully scraping away peach fuzz and dead skin cells. After the treatment, a soothing serum is applied to calm the skin and promote healing. Finally, a moisturizer and sun protection are applied to nourish and protect your newly revealed complexion.",
+          "Experience the transformative effects of Dermaplaning, a popular treatment loved by many for its immediate results and exceptional benefits."
+        ],
+        "price": [110],
+        "packageInfo": [],
+        "duration": [50],
+        "img": ["service-img--dermaplaning.jpg", "slogan--007.jpg"]
+      },
+      {
+        "id": "017",
+        "slug": "microneedling",
+        "name": "Microneedling",
+        "process": [
+          "Cleanse, numbing cream (if necessary), microneedling treatment, soothing serum, moisturizer, and sun protection."
+        ],
+        "description": "Discover the transformative power of Microneedling, a skin rejuvenation treatment that helps diminish acne scarring, boosts product absorption, and promotes the growth of new skin cells. Experience the benefits of this innovative procedure for improved skin texture and a revitalized complexion.",
+        "benefits": [
+          "Reduces the appearance of acne scars, promoting smoother and more even skin",
+          "Enhances product absorption, maximizing the effectiveness of skincare treatments",
+          "Stimulates the growth of new skin cells, promoting a youthful and rejuvenated complexion",
+          "Improves overall skin texture, minimizing fine lines, wrinkles, and unevenness",
+          "Tailored treatment for individual skin concerns, providing personalized results"
+        ],
+        "moreInfo": [
+          "At EllGlow, we believe in the power of advanced skincare treatments to unlock your skin's potential.",
+          "Microneedling is a remarkable procedure that addresses various skin concerns, including acne scarring, product absorption, and overall skin texture.",
+          "This non-surgical treatment promotes the growth of new skin cells, resulting in a revitalized and more youthful-looking complexion. Microneedling is performed using a specialized device with tiny needles that gently puncture the skin's surface. This controlled process stimulates your skin's natural healing response, triggering collagen and elastin production. The treatment effectively reduces the appearance of acne scars, promoting smoother and more even skin texture. Additionally, Microneedling enhances the absorption of skincare products, allowing them to penetrate deeper into the skin for optimal results. This makes it an ideal complement to your existing skincare routine.",
+          "Over time, Microneedling improves overall skin texture, minimizing the appearance of fine lines, wrinkles, and unevenness.",
+          "Our experienced professionals customize each Microneedling session to address your specific skin concerns, ensuring personalized and targeted results. The treatment starts with a thorough cleansing to prepare your skin, followed by the application of a numbing cream if needed for your comfort. The microneedling procedure is then performed, creating microchannels that stimulate collagen production and skin rejuvenation. Afterward, a soothing serum is applied to calm the skin and promote healing. Finally, a moisturizer and sun protection are applied to nourish and protect your skin.",
+          "Experience the transformative benefits of Microneedling and embrace a renewed complexion with EllGlow."
+        ],
+        "price": [150],
+        "packageInfo": [],
+        "duration": [40],
+        "img": ["service-img--microneedling.jpg"]
+      }
+    ],
+    "addons": [
+      {
+        "id": "001",
+        "img": ["service-img-addon--001.jpg"],
+        "content": [
+          {
+            "name": "Enzyme | Glycolic peel",
+            "description": "Enhance your skincare treatment with our Enzyme / Glycolic Peel add-on. This gentle yet effective peel helps exfoliate the skin, revealing a smoother and more radiant complexion. Experience the benefits of improved skin texture and enhanced product absorption.",
+            "price": 25
+          },
+          {
+            "name": "TCA | Jessner peel",
+            "description": "Rejuvenate your skin with our TCA | Jessner Peel add-on. This advanced chemical peel combines trichloroacetic acid (TCA) and a Jessner solution to deeply exfoliate and renew your skin. Experience the benefits of reduced hyperpigmentation, improved skin tone, and a more youthful appearance.",
+            "price": 40
+          }
+        ]
+      },
+      {
+        "id": "002",
+        "img": ["service-img-addon--001.jpg", "slogan--008.jpg"],
+        "content": [
+          {
+            "name": "Microdermabrasion",
+            "description": "Elevate your skincare experience with our Microdermabrasion add-on. This non-invasive exfoliation technique uses micro crystals to gently remove dead skin cells, revealing a smoother and more radiant complexion. Enhance the results of your treatment with improved skin texture, diminished fine lines, and a revitalized glow.",
+            "price": 40
+          },
+          {
+            "name": "Extraction",
+            "description": "Enhance your facial treatment with our Extraction add-on. Our skilled estheticians will perform gentle and effective extractions to remove impurities and unclog pores, leaving your skin clearer and healthier. Experience the benefits of improved skin clarity, reduced breakouts, and a refreshed complexion with this essential add-on service.",
+            "price": 40
+          }
+        ]
+      },
+      {
+        "id": "003",
+        "img": ["service-img-addon--002.jpg"],
+        "content": [
+          {
+            "name": "Eye treatment",
+            "description": "Treat your delicate eye area with our specialized Eye Treatment add-on. This targeted service focuses on reducing puffiness, diminishing dark circles, and minimizing fine lines around the eyes. Experience the rejuvenating effects of soothing and hydrating ingredients, leaving your eyes looking refreshed, revitalized, and youthful.",
+            "price": 40
+          },
+          {
+            "name": "Quick head | face massage",
+            "description": "Indulge in a moment of relaxation with our Quick Head | Face Massage add-on. Our skilled therapists will provide a rejuvenating massage that targets both the head and face, releasing tension and promoting a sense of calm. Experience the benefits of reduced stress, improved circulation, and a refreshed mind and complexion.",
+            "price": 40
+          }
+        ]
+      },
+      {
+        "id": "004",
+        "img": ["service-img-addon--001.jpg", "slogan--009.jpg"],
+        "content": [
+          {
+            "name": "Oxygen treatment",
+            "description": "Elevate your skincare experience with our Oxygen Treatment add-on. This rejuvenating treatment delivers a boost of oxygen infused with beneficial vitamins and antioxidants to nourish and revitalize your skin. Experience the benefits of improved hydration, enhanced skin radiance, and a refreshed, glowing complexion with this invigorating add-on service.",
+            "price": 40
+          },
+          {
+            "name": "LED treatment",
+            "description": "Enhance your skincare routine with our LED Treatment add-on. Harnessing the power of non-invasive light therapy, this treatment targets specific skin concerns, such as acne, inflammation, and signs of aging. Experience the benefits of improved skin tone, reduced blemishes, and a rejuvenated complexion. Let the gentle and targeted LED light work its magic for healthier and more radiant-looking skin.",
+            "price": 40
+          }
+        ]
+      }
+    ],
+    "other": [
+      {
+        "id": "001",
+        "img": ["service-img-other--hair-services.jpg"],
+        "name": "Hair services",
+        "slug": "hair-services",
+        "description": "Elevate your hairstyle with our professional Hair Services. Our experienced hairstylists offer expert cuts and styling techniques to help you achieve the perfect look that suits your individual style and enhances your overall appearance. Ell Glow is here to help with hair styling services for men and women.",
+        "benefits": [
+          "Expert haircuts and styling tailored to your desired look.",
+          "Personalized recommendations for hair care and maintenance.",
+          "Enhances your natural hair texture and showcases your unique features.",
+          "Boosts your confidence with a fresh and polished hairstyle.",
+          "Enjoy a relaxing and satisfying salon experience focused on meeting your hairstyling goals."
+        ]
+      },
+      {
+        "id": "002",
+        "img": ["service-img-other--hair-removal.jpg", "slogan--010.jpg"],
+        "name": "Hair removal | IPL laser",
+        "slug": "hair-removal",
+        "description": "Experience the freedom of smooth, hair-free skin with our Hair Removal | IPL Laser service. Our advanced IPL (Intense Pulsed Light) technology effectively targets and reduces unwanted hair, leaving your skin silky and smooth.",
+        "benefits": [
+          "Long-lasting hair reduction for various body areas.",
+          "Precise and efficient treatment with IPL technology.",
+          "Minimizes hair growth and promotes smoother skin texture.",
+          "No more worries about frequent shaving or waxing.",
+          "Boosts confidence and enhances your overall appearance."
+        ]
+      },
+      {
+        "id": "003",
+        "img": ["service-img-other--skintag.jpg"],
+        "name": "Skin Tag | Pigmentation removal",
+        "slug": "skin-tag",
+        "description": "Say goodbye to bothersome skin tags and imperfections with our SKINTag / Imperfections Removal service. Our skilled professionals use gentle and effective techniques to safely and efficiently remove skin tags, moles, and other common imperfections, leaving your skin flawless and blemish-free.",
+        "benefits": [
+          "Safely and effectively removes skin tags and imperfections.",
+          "Enhances the appearance of your skin by eliminating bothersome blemishes.",
+          "Boosts your self-confidence with a clearer and more even complexion.",
+          "Professional guidance and aftercare recommendations for optimal results.",
+          "Enjoy smooth and flawless skin with our expert removal techniques."
+        ]
+      },
+      {
+        "id": "004",
+        "img": ["service-img-other--body-treatment.jpg", "slogan--011.jpg"],
+        "name": "Body treatment",
+        "slug": "body-treatment",
+        "description": "Achieve your desired body goals with our transformative Body Treatment. Our specialized techniques are designed to sculpt and contour your body, helping to reduce stubborn fat deposits and enhance your overall physique.",
+        "benefits": [
+          "Targets specific areas to help reduce fat and reshape your body.",
+          "Improves body contouring and enhances muscle definition.",
+          "Tailored treatments to address your unique needs and goals.",
+          "Boosts self-confidence and body positivity.",
+          "Enjoy a rejuvenating and revitalizing experience for your body."
+        ]
+      },
+      {
+        "id": "05",
+        "img": ["service-img-other--anti-cellulite-massage.jpg"],
+        "name": "Anti Cellulite massage",
+        "slug": "anti-cellulite-massage",
+        "description": "Experience the rejuvenating power of our Anti Cellulite Massage, a specialized treatment designed to target and reduce the appearance of cellulite. Let our skilled therapists invigorate your body, improve circulation, and promote smoother-looking skin.",
+        "benefits": [
+          "Reduces the appearance of cellulite, promoting a smoother and more toned appearance.",
+          "Improves blood and lymphatic circulation, aiding in the elimination of toxins.",
+          "Relieves muscle tension and promotes relaxation.",
+          "Enhances skin texture and elasticity.",
+          "Tailored treatment for individual needs, providing personalized results."
+        ]
+      }
+    ]
+  },
+  "products": [
+    {
+      "id": "product-01",
+      "folder": "products",
+      "text": "Discover a world of high-end skincare at EllGlow. We're excited to present an extensive selection of luxurious products, including the exceptional offerings from Image. Our knowledgeable team is here to assist you in finding the perfect skincare solution tailored to your unique needs. Say goodbye to confusion as we guide you through the maze of options. At EllGlow, we take pride in curating a collection of top-notch brands renowned for their quality and effectiveness. Elevate your skincare routine with confidence. Visit us today and experience the pinnacle of skincare excellence.",
+      "images": [
+        "product-001.jpg",
+        "product-002.jpg",
+        "product-003.jpg",
+        "product-004.jpg",
+        "product-005.jpg",
+        "product-006.jpg",
+        "product-007.jpg",
+        "product-008.jpg",
+        "product-009.jpg"
+      ]
+    },
+    {
+      "id": "product-02",
+      "folder": "products",
+      "text": "Embark on a transformative skincare journey with EllGlow's premium selection of products, including the renowned Murad brand. We're thrilled to offer you the opportunity to explore and purchase these high-quality skincare gems. Our dedicated team is always on hand to assist you in finding the perfect Murad product that aligns with your unique skin goals. At EllGlow, we take pride in curating a collection of esteemed brands, and Murad is no exception. Experience the power of scientifically advanced formulas and indulge in the luxury of Murad's skincare expertise.",
+      "images": [
+        "product-012.jpg",
+        "product-013.jpg",
+        "product-014.jpg",
+        "product-015.jpg"
+      ]
+    },
+    {
+      "id": "product-03",
+      "folder": "products",
+      "text": "At EllGlow, we're delighted to present a curated selection of premium skincare products that embody the essence of luxury and efficacy. We understand that navigating the vast world of skincare can be overwhelming, which is why we take pride in offering a thoughtfully curated collection of high-quality products. From cleansers to serums, moisturizers to masks, we've handpicked each item to ensure your skincare journey is nothing short of exceptional. Trust EllGlow as your go-to destination for top-tier skincare products that deliver remarkable results.",
+      "images": ["product-010.jpg", "product-011.jpg"]
+    }
+  ],
+  "details": {
+    "address": "1775 Main str, Unit B, Irvine CA, 92614",
+    "phoneNumber": "562 206 31 98",
+    "whatsAppNumber": "562 206 31 98",
+    "instagramLink": "https://www.instagram.com/",
+    "bookingServiceURL": "https://google.com"
+  }
+}
