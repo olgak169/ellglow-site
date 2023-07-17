@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;700;900&family=Playfair+Display:wght@400;500&family=Gwendolyn&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;700&family=Playfair+Display:wght@400;500&display=swap');
+
+@font-face {
+  font-family: 'Barokah Signature';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+
+  unicode-range: U+000-5FF;
+  src: url('~/assets/fonts/BarokahSignatureRegular.ttf') format('ttf'),
+    url('~/assets/fonts/BarokahSignatureRegular.woff') format('woff');
+}
 
 .font_display {
   font-family: 'Barokah Signature' !important;
