@@ -62,12 +62,13 @@
   @include breaks(medium) {
     background-image: url('~/assets/img/backgrounds/pattern-4-3--002.svg?inline');
     background-size: contain;
-    background-position: center center;
+    background-position: top center;
     padding: 3rem 0;
   }
   @include breaks(large) {
     min-height: 40rem;
     background-size: contain;
+    background-position: center center;
     background-repeat: no-repeat;
   }
 }

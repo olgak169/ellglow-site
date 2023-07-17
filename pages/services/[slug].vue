@@ -1,7 +1,6 @@
 <template>
   <main>
-    <div class="hero">
-      <BgsBgPattern43001 />
+    <div class="hero hero_pattern-3">
       <div class="hero_services flex-column shadow_md">
         <h1 class="font_capital font__step-3 fw__300 text__primary text__centered">
           {{ service.name }}

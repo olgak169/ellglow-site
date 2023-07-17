@@ -1,13 +1,24 @@
 @import 'variables';
 
+.hero_pattern-1 {
+  background-image: url('~/assets/img/backgrounds/pattern-4-3--001.svg?inline');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: repeat;
+}
+.hero_pattern-3 {
+  background-image: url('~/assets/img/backgrounds/pattern-4-3--003.svg?inline');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: repeat;
+}
 .hero_services {
   --flex-gap: 1.25rem;
+  max-width: 90%;
   margin: 3rem auto;
   padding: var(--space-xl);
-  background: var(--clr-accent-90);
   border-radius: $b_rad_large;
-  max-width: 90%;
-  border: 1px solid var(--clr-primary-80, #ffd9e0);
+  border: 1px solid var(--clr-primary-80);
   background: radial-gradient(130% 90% at 20% 20%, #f8e1ff 0%, #ff97ba 100%);
 
   @include breaks(large) {
