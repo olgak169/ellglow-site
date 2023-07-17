@@ -6,13 +6,12 @@
           {{ service.name }}
         </h1>
         <SvgsSmallCircleDeco />
-
-        <a
+        <NuxtLink
           target="_blank"
-          :href="`${details.bookingServiceURL}`"
+          :to="`${details.bookingServiceURL}`"
           class="btn btn_square btn_bg"
-          >Book now</a
-        >
+          >Book now
+        </NuxtLink>
       </div>
     </div>
     <ElementsDividerScrollTitle title="Face" :color="2" :ready="ready" />
@@ -45,10 +44,9 @@
             <p v-for="(item, ind) in service.packageInfo" :key="ind">{{ item }}</p>
           </h3>
         </div>
-
         <NuxtLink to="/services" class="btn btn_square mblock__xl btn_bg"
-          >Back to services</NuxtLink
-        >
+          >Back to services
+        </NuxtLink>
       </div>
       <ElementsProductBlock :content="product" />
     </div>

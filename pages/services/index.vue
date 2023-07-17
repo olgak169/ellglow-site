@@ -10,12 +10,12 @@
           home with you as they are available for purchase at our salon. Secure your
           preferred time by booking in advance. Treat yourself to the best!
         </p>
-        <a
-          :href="`${details.bookingServiceURL}`"
+        <NuxtLink
+          :to="`${details.bookingServiceURL}`"
           target="_blank"
           class="btn btn_square btn_bg"
-          >Book now</a
-        >
+          >Book now
+        </NuxtLink>
       </div>
     </div>
     <ElementsDividerScrollTitle title="Services" :color="1" :ready="ready" />
