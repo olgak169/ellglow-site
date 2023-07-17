@@ -4,13 +4,13 @@
     "file": "BgPattern-4-3--001.03278e2f.css",
     "src": "BgPattern-4-3--001.css"
   },
-  "_BgPattern-4-3--001.bff58395.js": {
+  "_BgPattern-4-3--001.420c9d51.js": {
     "resourceType": "script",
     "module": true,
     "css": [
       "BgPattern-4-3--001.03278e2f.css"
     ],
-    "file": "BgPattern-4-3--001.bff58395.js",
+    "file": "BgPattern-4-3--001.420c9d51.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -19,27 +19,27 @@
     "file": "BgPattern-4-3--001.03278e2f.css",
     "resourceType": "style"
   },
-  "_DividerScrollTitle.aef6fdf6.js": {
+  "_DividerScrollTitle.3052733a.js": {
     "resourceType": "script",
     "module": true,
-    "file": "DividerScrollTitle.aef6fdf6.js",
+    "file": "DividerScrollTitle.3052733a.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_ProductBlock.bb7f6a15.js": {
+  "_ProductBlock.2ee8bf13.js": {
     "resourceType": "script",
     "module": true,
-    "file": "ProductBlock.bb7f6a15.js",
+    "file": "ProductBlock.2ee8bf13.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_nuxt-img.03d6ac6f.js"
+      "_nuxt-img.4bb57b0e.js"
     ]
   },
-  "_nuxt-img.03d6ac6f.js": {
+  "_nuxt-img.4bb57b0e.js": {
     "resourceType": "script",
     "module": true,
-    "file": "nuxt-img.03d6ac6f.js",
+    "file": "nuxt-img.4bb57b0e.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -110,73 +110,22 @@
     "file": "a-img-05.d3c732f0.jpg",
     "src": "assets/img/main-img/a-img-05.jpg"
   },
-  "node_modules/nuxt/dist/app/entry.css": {
-    "resourceType": "style",
-    "file": "entry.c970cde6.css",
-    "src": "node_modules/nuxt/dist/app/entry.css"
-  },
   "node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
-    "assets": [
-      "pattern-4-3--001.c6a4c559.svg",
-      "pattern-4-3--002.8acf7e99.svg",
-      "pattern-4-3--003.1d2dcce0.svg",
-      "pattern-4-3--004.88d81c4b.svg",
-      "pattern-square--001.1a42f785.svg",
-      "pattern-square--002.8515be5f.svg"
-    ],
-    "css": [
-      "entry.c970cde6.css"
-    ],
-    "dynamicImports": [
-      "virtual:nuxt:/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/error-component.mjs"
-    ],
-    "file": "entry.3232e779.js",
+    "dynamicImports": [],
+    "file": "entry.2224f910.js",
     "isEntry": true,
-    "src": "node_modules/nuxt/dist/app/entry.js"
-  },
-  "entry.c970cde6.css": {
-    "file": "entry.c970cde6.css",
-    "resourceType": "style"
-  },
-  "pattern-4-3--001.c6a4c559.svg": {
-    "file": "pattern-4-3--001.c6a4c559.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
-  },
-  "pattern-4-3--002.8acf7e99.svg": {
-    "file": "pattern-4-3--002.8acf7e99.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
-  },
-  "pattern-4-3--003.1d2dcce0.svg": {
-    "file": "pattern-4-3--003.1d2dcce0.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
-  },
-  "pattern-4-3--004.88d81c4b.svg": {
-    "file": "pattern-4-3--004.88d81c4b.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
-  },
-  "pattern-square--001.1a42f785.svg": {
-    "file": "pattern-square--001.1a42f785.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
-  },
-  "pattern-square--002.8515be5f.svg": {
-    "file": "pattern-square--002.8515be5f.svg",
-    "resourceType": "image",
-    "mimeType": "image/svg+xml"
+    "src": "node_modules/nuxt/dist/app/entry.js",
+    "_globalCSS": true
   },
   "pages/about.vue": {
     "resourceType": "script",
     "module": true,
-    "file": "about.c0e84d6a.js",
+    "file": "about.0e3f9859.js",
     "imports": [
-      "_DividerScrollTitle.aef6fdf6.js",
-      "_nuxt-img.03d6ac6f.js",
+      "_DividerScrollTitle.3052733a.js",
+      "_nuxt-img.4bb57b0e.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
@@ -185,7 +134,7 @@
   "pages/contact.vue": {
     "resourceType": "script",
     "module": true,
-    "file": "contact.6728b84b.js",
+    "file": "contact.f8996ae4.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -202,11 +151,11 @@
       "a-img-04.2b7c92b6.jpg",
       "a-img-05.d3c732f0.jpg"
     ],
-    "file": "index.51c99533.js",
+    "file": "index.b114e40b.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_ProductBlock.bb7f6a15.js",
-      "_nuxt-img.03d6ac6f.js"
+      "_ProductBlock.2ee8bf13.js",
+      "_nuxt-img.4bb57b0e.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/index.vue"
@@ -239,13 +188,13 @@
   "pages/services/[slug].vue": {
     "resourceType": "script",
     "module": true,
-    "file": "_slug_.95ec4d49.js",
+    "file": "_slug_.ef6d3fbe.js",
     "imports": [
-      "_BgPattern-4-3--001.bff58395.js",
-      "_ProductBlock.bb7f6a15.js",
-      "_DividerScrollTitle.aef6fdf6.js",
+      "_BgPattern-4-3--001.420c9d51.js",
+      "_ProductBlock.2ee8bf13.js",
+      "_DividerScrollTitle.3052733a.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_nuxt-img.03d6ac6f.js"
+      "_nuxt-img.4bb57b0e.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/services/[slug].vue"
@@ -253,25 +202,15 @@
   "pages/services/index.vue": {
     "resourceType": "script",
     "module": true,
-    "file": "index.c15fc955.js",
+    "file": "index.a9c5dd28.js",
     "imports": [
-      "_BgPattern-4-3--001.bff58395.js",
-      "_ProductBlock.bb7f6a15.js",
-      "_DividerScrollTitle.aef6fdf6.js",
-      "_nuxt-img.03d6ac6f.js",
+      "_BgPattern-4-3--001.420c9d51.js",
+      "_ProductBlock.2ee8bf13.js",
+      "_DividerScrollTitle.3052733a.js",
+      "_nuxt-img.4bb57b0e.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/services/index.vue"
-  },
-  "virtual:nuxt:/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/error-component.mjs": {
-    "resourceType": "script",
-    "module": true,
-    "file": "error-component.9d7055f3.js",
-    "imports": [
-      "node_modules/nuxt/dist/app/entry.js"
-    ],
-    "isDynamicEntry": true,
-    "src": "virtual:nuxt:/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/error-component.mjs"
   }
 }

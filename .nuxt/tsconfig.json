@@ -9,85 +9,94 @@
     "skipLibCheck": true,
     "strict": true,
     "allowJs": true,
+    "baseUrl": "/Users/olgakrupnova/Documents/git-folders/ellglow-site",
     "noEmit": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "types": [
       "node"
     ],
-    "baseUrl": "..",
     "paths": {
       "~": [
-        "."
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site"
       ],
       "~/*": [
-        "./*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*"
       ],
       "@": [
-        "."
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site"
       ],
       "@/*": [
-        "./*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*"
       ],
       "~~": [
-        "."
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site"
       ],
       "~~/*": [
-        "./*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*"
       ],
       "@@": [
-        "."
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site"
       ],
       "@@/*": [
-        "./*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*"
       ],
       "assets": [
-        "assets"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/assets"
       ],
       "assets/*": [
-        "assets/*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/assets/*"
       ],
       "public": [
-        "public"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/public"
       ],
       "public/*": [
-        "public/*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/public/*"
       ],
       "#app": [
-        "node_modules/nuxt/dist/app"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/nuxt/dist/app"
       ],
       "#app/*": [
-        "node_modules/nuxt/dist/app/*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/nuxt/dist/app/*"
       ],
       "vue-demi": [
-        "node_modules/nuxt/dist/app/compat/vue-demi"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/nuxt/dist/app/compat/vue-demi"
       ],
       "#image": [
-        "node_modules/@nuxt/image/dist/runtime"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/@nuxt/image/dist/runtime"
       ],
       "#image/*": [
-        "node_modules/@nuxt/image/dist/runtime/*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/node_modules/@nuxt/image/dist/runtime/*"
       ],
       "#vue-router": [
-        ".nuxt/vue-router"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/vue-router"
       ],
       "#imports": [
-        ".nuxt/imports"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/imports"
       ],
       "#build": [
-        ".nuxt"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt"
       ],
       "#build/*": [
-        ".nuxt/*"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/*"
       ],
       "#components": [
-        ".nuxt/components"
+        "/Users/olgakrupnova/Documents/git-folders/ellglow-site/.nuxt/components"
       ]
     }
   },
   "include": [
     "./nuxt.d.ts",
-    "../**/*"
+    "../**/*",
+    "../**/*",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site",
+    "/Users/olgakrupnova/Documents/git-folders/ellglow-site/*"
   ],
   "exclude": [
     "../dist",

@@ -1,15 +1,15 @@
-import { reactive, hasInjectionContext, getCurrentInstance, version, inject, ref, watchEffect, watch, unref, toRef, isRef, isShallow, isReactive, toRaw, nextTick, shallowRef, computed, isReadonly, defineComponent, h, resolveComponent, mergeProps, useSSRContext, withCtx, createVNode, createTextVNode, Transition, Suspense, provide, onErrorCaptured, onServerPrefetch, resolveDynamicComponent, defineAsyncComponent, createApp } from "vue";
+import { reactive, hasInjectionContext, getCurrentInstance, toRef, isRef, inject, nextTick, shallowRef, shallowReactive, isReadonly, version, ref, watchEffect, watch, unref, isShallow, isReactive, toRaw, defineComponent, computed, h, resolveComponent, mergeProps, useSSRContext, withCtx, createVNode, createTextVNode, Suspense, Transition, provide, onErrorCaptured, onServerPrefetch, resolveDynamicComponent, defineAsyncComponent, createApp } from "vue";
 import { $fetch } from "ofetch";
 import { useRuntimeConfig as useRuntimeConfig$1 } from "#internal/nitro";
 import { createHooks } from "hookable";
 import { getContext, executeAsync } from "unctx";
-import "devalue";
+import { createMemoryHistory, createRouter, START_LOCATION, useRoute as useRoute$1, RouterView } from "vue-router";
 import { sanitizeStatusCode, createError as createError$1 } from "h3";
+import { withQuery, hasProtocol, parseURL, joinURL, parseQuery, withTrailingSlash, withoutTrailingSlash } from "ufo";
+import "devalue";
 import { renderSSRHead } from "@unhead/ssr";
 import { getActiveHead, createServerHead as createServerHead$1, composableNames, unpackMeta } from "unhead";
 import { defineHeadPlugin } from "@unhead/shared";
-import { createMemoryHistory, createRouter, START_LOCATION, useRoute as useRoute$1, RouterView } from "vue-router";
-import { hasProtocol, parseURL, joinURL, parseQuery, withTrailingSlash, withoutTrailingSlash } from "ufo";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderClass, ssrRenderAttr, ssrRenderSuspense, ssrRenderVNode } from "vue/server-renderer";
 import "destr";
 import "klona";
@@ -25,7 +25,7 @@ function createNuxtApp(options) {
     globalName: "nuxt",
     versions: {
       get nuxt() {
-        return "3.5.2";
+        return "3.6.3";
       },
       get vue() {
         return nuxtApp.vueApp.version;
@@ -87,9 +87,8 @@ function createNuxtApp(options) {
   {
     if (nuxtApp.ssrContext) {
       nuxtApp.ssrContext.nuxt = nuxtApp;
-    }
-    if (nuxtApp.ssrContext) {
       nuxtApp.ssrContext._payloadReducers = {};
+      nuxtApp.payload.path = nuxtApp.ssrContext.url;
     }
     nuxtApp.ssrContext = nuxtApp.ssrContext || {};
     if (nuxtApp.ssrContext.payload) {
@@ -106,23 +105,24 @@ function createNuxtApp(options) {
   return nuxtApp;
 }
 async function applyPlugin(nuxtApp, plugin2) {
-  if (typeof plugin2 !== "function") {
-    return;
+  if (plugin2.hooks) {
+    nuxtApp.hooks.addHooks(plugin2.hooks);
   }
-  const { provide: provide2 } = await nuxtApp.runWithContext(() => plugin2(nuxtApp)) || {};
-  if (provide2 && typeof provide2 === "object") {
-    for (const key in provide2) {
-      nuxtApp.provide(key, provide2[key]);
+  if (typeof plugin2 === "function") {
+    const { provide: provide2 } = await nuxtApp.runWithContext(() => plugin2(nuxtApp)) || {};
+    if (provide2 && typeof provide2 === "object") {
+      for (const key in provide2) {
+        nuxtApp.provide(key, provide2[key]);
+      }
     }
   }
 }
 async function applyPlugins(nuxtApp, plugins2) {
-  var _a;
   const parallels = [];
   const errors = [];
   for (const plugin2 of plugins2) {
     const promise = applyPlugin(nuxtApp, plugin2);
-    if ((_a = plugin2.meta) == null ? void 0 : _a.parallel) {
+    if (plugin2.parallel) {
       parallels.push(promise.catch((e) => errors.push(e)));
     } else {
       await promise;
@@ -133,49 +133,14 @@ async function applyPlugins(nuxtApp, plugins2) {
     throw errors[0];
   }
 }
-function normalizePlugins(_plugins2) {
-  const plugins2 = [];
-  for (const plugin2 of _plugins2) {
-    if (typeof plugin2 !== "function") {
-      continue;
-    }
-    let _plugin = plugin2;
-    if (plugin2.length > 1) {
-      _plugin = (nuxtApp) => plugin2(nuxtApp, nuxtApp.provide);
-    }
-    plugins2.push(_plugin);
-  }
-  plugins2.sort((a, b) => {
-    var _a, _b;
-    return (((_a = a.meta) == null ? void 0 : _a.order) || orderMap.default) - (((_b = b.meta) == null ? void 0 : _b.order) || orderMap.default);
-  });
-  return plugins2;
-}
-const orderMap = {
-  pre: -20,
-  default: 0,
-  post: 20
-};
-function defineNuxtPlugin(plugin2, meta) {
-  var _a;
+/*! @__NO_SIDE_EFFECTS__ */
+function defineNuxtPlugin(plugin2) {
   if (typeof plugin2 === "function") {
-    return /* @__PURE__ */ defineNuxtPlugin({ setup: plugin2 }, meta);
+    return plugin2;
   }
-  const wrapper = (nuxtApp) => {
-    if (plugin2.hooks) {
-      nuxtApp.hooks.addHooks(plugin2.hooks);
-    }
-    if (plugin2.setup) {
-      return plugin2.setup(nuxtApp);
-    }
-  };
-  wrapper.meta = {
-    name: (meta == null ? void 0 : meta.name) || plugin2.name || ((_a = plugin2.setup) == null ? void 0 : _a.name),
-    parallel: plugin2.parallel,
-    order: (meta == null ? void 0 : meta.order) || plugin2.order || orderMap[plugin2.enforce || "default"] || orderMap.default
-  };
-  wrapper[NuxtPluginIndicator] = true;
-  return wrapper;
+  delete plugin2.name;
+  return Object.assign(plugin2.setup || (() => {
+  }), plugin2, { [NuxtPluginIndicator]: true });
 }
 function callWithNuxt(nuxt, setup, args) {
   const fn = () => args ? setup(...args) : setup();
@@ -183,6 +148,7 @@ function callWithNuxt(nuxt, setup, args) {
     return nuxt.vueApp.runWithContext(() => nuxtAppCtx.callAsync(nuxt, fn));
   }
 }
+/*! @__NO_SIDE_EFFECTS__ */
 function useNuxtApp() {
   var _a;
   let nuxtAppInstance;
@@ -197,129 +163,14 @@ function useNuxtApp() {
   }
   return nuxtAppInstance;
 }
+/*! @__NO_SIDE_EFFECTS__ */
 function useRuntimeConfig() {
   return useNuxtApp().$config;
 }
 function defineGetter(obj, key, val) {
   Object.defineProperty(obj, key, { get: () => val });
 }
-const style = "";
-function resolveUnref(r) {
-  return typeof r === "function" ? r() : unref(r);
-}
-function resolveUnrefHeadInput(ref3, lastKey = "") {
-  if (ref3 instanceof Promise)
-    return ref3;
-  const root = resolveUnref(ref3);
-  if (!ref3 || !root)
-    return root;
-  if (Array.isArray(root))
-    return root.map((r) => resolveUnrefHeadInput(r, lastKey));
-  if (typeof root === "object") {
-    return Object.fromEntries(
-      Object.entries(root).map(([k, v]) => {
-        if (k === "titleTemplate" || k.startsWith("on"))
-          return [k, unref(v)];
-        return [k, resolveUnrefHeadInput(v, k)];
-      })
-    );
-  }
-  return root;
-}
-const Vue3 = version.startsWith("3");
-const headSymbol = "usehead";
-function injectHead() {
-  return getCurrentInstance() && inject(headSymbol) || getActiveHead();
-}
-function vueInstall(head) {
-  const plugin2 = {
-    install(app) {
-      if (Vue3) {
-        app.config.globalProperties.$unhead = head;
-        app.config.globalProperties.$head = head;
-        app.provide(headSymbol, head);
-      }
-    }
-  };
-  return plugin2.install;
-}
-function createServerHead(options = {}) {
-  const head = createServerHead$1({
-    ...options,
-    plugins: [
-      VueReactiveUseHeadPlugin(),
-      ...(options == null ? void 0 : options.plugins) || []
-    ]
-  });
-  head.install = vueInstall(head);
-  return head;
-}
-function VueReactiveUseHeadPlugin() {
-  return defineHeadPlugin({
-    hooks: {
-      "entries:resolve": function(ctx) {
-        for (const entry2 of ctx.entries)
-          entry2.resolvedInput = resolveUnrefHeadInput(entry2.input);
-      }
-    }
-  });
-}
-function clientUseHead(input, options = {}) {
-  const head = injectHead();
-  const deactivated = ref(false);
-  const resolvedInput = ref({});
-  watchEffect(() => {
-    resolvedInput.value = deactivated.value ? {} : resolveUnrefHeadInput(input);
-  });
-  const entry2 = head.push(resolvedInput.value, options);
-  watch(resolvedInput, (e) => {
-    entry2.patch(e);
-  });
-  getCurrentInstance();
-  return entry2;
-}
-function serverUseHead(input, options = {}) {
-  const head = injectHead();
-  return head.push(input, options);
-}
-function useHead(input, options = {}) {
-  var _a;
-  const head = injectHead();
-  if (head) {
-    const isBrowser = !!((_a = head.resolvedOptions) == null ? void 0 : _a.document);
-    if (options.mode === "server" && isBrowser || options.mode === "client" && !isBrowser)
-      return;
-    return isBrowser ? clientUseHead(input, options) : serverUseHead(input, options);
-  }
-}
-function useSeoMeta(input, options) {
-  const headInput = ref({});
-  watchEffect(() => {
-    const resolvedMeta = resolveUnrefHeadInput(input);
-    const { title, titleTemplate, ...meta } = resolvedMeta;
-    headInput.value = {
-      title,
-      titleTemplate,
-      meta: unpackMeta(meta)
-    };
-  });
-  return useHead(headInput, options);
-}
-const coreComposableNames = [
-  "injectHead"
-];
-({
-  "@unhead/vue": [...coreComposableNames, ...composableNames]
-});
-const appHead = { "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "charset": "utf-8" }], "link": [], "style": [], "script": [], "noscript": [], "charset": "utf-8", "viewport": "width=device-width, initial-scale=1" };
-const appLayoutTransition = false;
-const appPageTransition = false;
-const appKeepalive = false;
-function definePayloadReducer(name, reduce) {
-  {
-    useNuxtApp().ssrContext._payloadReducers[name] = reduce;
-  }
-}
+const useStateKeyPrefix = "$s";
 function useState(...args) {
   const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
   if (typeof args[0] !== "string") {
@@ -332,7 +183,7 @@ function useState(...args) {
   if (init5 !== void 0 && typeof init5 !== "function") {
     throw new Error("[nuxt] [useState] init must be a function: " + init5);
   }
-  const key = "$s" + _key;
+  const key = useStateKeyPrefix + _key;
   const nuxt = useNuxtApp();
   const state = toRef(nuxt.payload.state, key);
   if (state.value === void 0 && init5) {
@@ -345,17 +196,22 @@ function useState(...args) {
   }
   return state;
 }
+const LayoutMetaSymbol = Symbol("layout-meta");
+const PageRouteSymbol = Symbol("route");
 const useRouter = () => {
   var _a;
   return (_a = useNuxtApp()) == null ? void 0 : _a.$router;
 };
 const useRoute = () => {
   if (hasInjectionContext()) {
-    return inject("_route", useNuxtApp()._route);
+    return inject(PageRouteSymbol, useNuxtApp()._route);
   }
   return useNuxtApp()._route;
 };
-const defineNuxtRouteMiddleware = (middleware) => middleware;
+/*! @__NO_SIDE_EFFECTS__ */
+function defineNuxtRouteMiddleware(middleware) {
+  return middleware;
+}
 const isProcessingMiddleware = () => {
   try {
     if (useNuxtApp()._processingMiddleware) {
@@ -370,7 +226,10 @@ const navigateTo = (to, options) => {
   if (!to) {
     to = "/";
   }
-  const toPath = typeof to === "string" ? to : to.path || "/";
+  const toPath = typeof to === "string" ? to : withQuery(to.path || "/", to.query || {}) + (to.hash || "");
+  if (options == null ? void 0 : options.open) {
+    return Promise.resolve();
+  }
   const isExternal = (options == null ? void 0 : options.external) || hasProtocol(toPath, { acceptRelative: true });
   if (isExternal && !(options == null ? void 0 : options.external)) {
     throw new Error("Navigating to external URL is not allowed by default. Use `navigateTo (url, { external: true })`.");
@@ -380,12 +239,12 @@ const navigateTo = (to, options) => {
   }
   const inMiddleware = isProcessingMiddleware();
   const router = useRouter();
+  const nuxtApp = useNuxtApp();
   {
-    const nuxtApp = useNuxtApp();
     if (nuxtApp.ssrContext) {
       const fullPath = typeof to === "string" || isExternal ? toPath : router.resolve(to).fullPath || "/";
       const location2 = isExternal ? toPath : joinURL(useRuntimeConfig().app.baseURL, fullPath);
-      async function redirect() {
+      async function redirect(response) {
         await nuxtApp.callHook("app:redirected");
         const encodedLoc = location2.replace(/"/g, "%22");
         nuxtApp.ssrContext._renderResponse = {
@@ -393,16 +252,16 @@ const navigateTo = (to, options) => {
           body: `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=${encodedLoc}"></head></html>`,
           headers: { location: location2 }
         };
-        return inMiddleware ? (
-          /* abort route navigation */
-          false
-        ) : void 0;
+        return response;
       }
       if (!isExternal && inMiddleware) {
-        router.afterEach((final) => final.fullPath === fullPath ? redirect() : void 0);
+        router.afterEach((final) => final.fullPath === fullPath ? redirect(false) : void 0);
         return to;
       }
-      return redirect();
+      return redirect(!inMiddleware ? void 0 : (
+        /* abort route navigation */
+        false
+      ));
     }
   }
   if (isExternal) {
@@ -410,6 +269,13 @@ const navigateTo = (to, options) => {
       location.replace(toPath);
     } else {
       location.href = toPath;
+    }
+    if (inMiddleware) {
+      if (!nuxtApp.isHydrating) {
+        return false;
+      }
+      return new Promise(() => {
+      });
     }
     return Promise.resolve();
   }
@@ -435,46 +301,6 @@ const createError = (err) => {
   _err.__nuxt_error = true;
   return _err;
 };
-const reducers = {
-  NuxtError: (data2) => isNuxtError(data2) && data2.toJSON(),
-  EmptyShallowRef: (data2) => isRef(data2) && isShallow(data2) && !data2.value && (JSON.stringify(data2.value) || "_"),
-  EmptyRef: (data2) => isRef(data2) && !data2.value && (JSON.stringify(data2.value) || "_"),
-  ShallowRef: (data2) => isRef(data2) && isShallow(data2) && data2.value,
-  ShallowReactive: (data2) => isReactive(data2) && isShallow(data2) && toRaw(data2),
-  Ref: (data2) => isRef(data2) && data2.value,
-  Reactive: (data2) => isReactive(data2) && toRaw(data2)
-};
-const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:revive-payload:server",
-  setup() {
-    for (const reducer in reducers) {
-      definePayloadReducer(reducer, reducers[reducer]);
-    }
-  }
-});
-const components_plugin_KR1HBZs4kY = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:global-components"
-});
-const unhead_KgADcZ0jPj = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:head",
-  setup(nuxtApp) {
-    const createHead = createServerHead;
-    const head = createHead();
-    head.push(appHead);
-    nuxtApp.vueApp.use(head);
-    {
-      nuxtApp.ssrContext.renderMeta = async () => {
-        const meta = await renderSSRHead(head);
-        return {
-          ...meta,
-          bodyScriptsPrepend: meta.bodyTagsOpen,
-          // resolves naming difference with NuxtMeta and Unhead
-          bodyScripts: meta.bodyTags
-        };
-      };
-    }
-  }
-});
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -540,7 +366,7 @@ var _config$1 = {
   kill: false
 }, _revertConfig = {
   suppressEvents: true
-}, _reservedProps = {}, _lazyTweens = [], _lazyLookup = {}, _lastRenderedFrame, _plugins$1 = {}, _effects = {}, _nextGCFrame = 30, _harnessPlugins = [], _callbackNames = "", _harness = function _harness2(targets) {
+}, _reservedProps = {}, _lazyTweens = [], _lazyLookup = {}, _lastRenderedFrame, _plugins = {}, _effects = {}, _nextGCFrame = 30, _harnessPlugins = [], _callbackNames = "", _harness = function _harness2(targets) {
   var target = targets[0], harnessPlugin, i;
   _isObject$1(target) || _isFunction$2(target) || (targets = [targets]);
   if (!(harnessPlugin = (target._gsap || {}).harness)) {
@@ -2295,7 +2121,7 @@ var _addComplexStringPropTween = function _addComplexStringPropTween2(target, pr
   return copy;
 }, _checkPlugin = function _checkPlugin2(property, vars, tween, index, target, targets) {
   var plugin2, pt, ptLookup, i;
-  if (_plugins$1[property] && (plugin2 = new _plugins$1[property]()).init(target, plugin2.rawVars ? vars[property] : _processVars(vars[property], index, target, targets, tween), tween, index, targets) !== false) {
+  if (_plugins[property] && (plugin2 = new _plugins[property]()).init(target, plugin2.rawVars ? vars[property] : _processVars(vars[property], index, target, targets, tween), tween, index, targets) !== false) {
     tween._pt = pt = new PropTween(tween._pt, target, property, 0, 1, plugin2.render, plugin2, 0, plugin2.priority);
     if (tween !== _quickTween) {
       ptLookup = tween._ptLookup[tween._targets.indexOf(target)];
@@ -2393,7 +2219,7 @@ var _addComplexStringPropTween = function _addComplexStringPropTween2(target, pr
       }
       if (!harness || harnessVars) {
         for (p in cleanVars) {
-          if (_plugins$1[p] && (plugin2 = _checkPlugin(p, cleanVars, tween, index, target, fullTargets))) {
+          if (_plugins[p] && (plugin2 = _checkPlugin(p, cleanVars, tween, index, target, fullTargets))) {
             plugin2.priority && (hasPriority = 1);
           } else {
             ptLookup[p] = pt = _addPropTween.call(tween, target, p, "get", cleanVars[p], index, fullTargets, 0, vars.stringFilter);
@@ -3101,8 +2927,8 @@ var _gsap = {
     var getter = _getCache(target || {}).get, format = unit ? _passThrough$1 : _numericIfPossible;
     unit === "native" && (unit = "");
     return !target ? target : !property ? function(property2, unit2, uncache2) {
-      return format((_plugins$1[property2] && _plugins$1[property2].get || getter)(target, property2, unit2, uncache2));
-    } : format((_plugins$1[property] && _plugins$1[property].get || getter)(target, property, unit, uncache));
+      return format((_plugins[property2] && _plugins[property2].get || getter)(target, property2, unit2, uncache2));
+    } : format((_plugins[property] && _plugins[property].get || getter)(target, property, unit, uncache));
   },
   quickSetter: function quickSetter(target, property, unit) {
     target = toArray(target);
@@ -3118,7 +2944,7 @@ var _gsap = {
       };
     }
     target = target[0] || {};
-    var Plugin = _plugins$1[property], cache = _getCache(target), p = cache.harness && (cache.harness.aliases || {})[property] || property, setter = Plugin ? function(value) {
+    var Plugin = _plugins[property], cache = _getCache(target), p = cache.harness && (cache.harness.aliases || {})[property] || property, setter = Plugin ? function(value) {
       var p2 = new Plugin();
       _quickTween._pt = 0;
       p2.init(target, unit ? value + unit : value, _quickTween, 0, [target]);
@@ -3150,7 +2976,7 @@ var _gsap = {
   registerEffect: function registerEffect(_ref3) {
     var name = _ref3.name, effect = _ref3.effect, plugins2 = _ref3.plugins, defaults2 = _ref3.defaults, extendTimeline = _ref3.extendTimeline;
     (plugins2 || "").split(",").forEach(function(pluginName) {
-      return pluginName && !_plugins$1[pluginName] && !_globals[pluginName] && _warn(name + " effect requires " + pluginName + " plugin.");
+      return pluginName && !_plugins[pluginName] && !_globals[pluginName] && _warn(name + " effect requires " + pluginName + " plugin.");
     });
     _effects[name] = function(targets, vars, tl) {
       return effect(toArray(targets), _setDefaults$1(vars || {}, defaults2), tl);
@@ -3238,7 +3064,7 @@ var _gsap = {
   effects: _effects,
   ticker: _ticker,
   updateRoot: Timeline.updateRoot,
-  plugins: _plugins$1,
+  plugins: _plugins,
   globalTimeline: _globalTimeline,
   core: {
     PropTween,
@@ -3410,8 +3236,8 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   cache.renderTransform(ratio, cache);
 }, _transformProp$1 = "transform", _transformOriginProp = _transformProp$1 + "Origin", _saveStyle = function _saveStyle2(property, isNotCSS) {
   var _this = this;
-  var target = this.target, style2 = target.style;
-  if (property in _transformProps && style2) {
+  var target = this.target, style = target.style;
+  if (property in _transformProps && style) {
     this.tfm = this.tfm || {};
     if (property !== "transform") {
       property = _propertyAliases[property] || property;
@@ -3432,17 +3258,17 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
     }
     property = _transformProp$1;
   }
-  (style2 || isNotCSS) && this.props.push(property, isNotCSS, style2[property]);
-}, _removeIndependentTransforms = function _removeIndependentTransforms2(style2) {
-  if (style2.translate) {
-    style2.removeProperty("translate");
-    style2.removeProperty("scale");
-    style2.removeProperty("rotate");
+  (style || isNotCSS) && this.props.push(property, isNotCSS, style[property]);
+}, _removeIndependentTransforms = function _removeIndependentTransforms2(style) {
+  if (style.translate) {
+    style.removeProperty("translate");
+    style.removeProperty("scale");
+    style.removeProperty("rotate");
   }
 }, _revertStyle = function _revertStyle2() {
-  var props = this.props, target = this.target, style2 = target.style, cache = target._gsap, i, p;
+  var props = this.props, target = this.target, style = target.style, cache = target._gsap, i, p;
   for (i = 0; i < props.length; i += 3) {
-    props[i + 1] ? target[props[i]] = props[i + 2] : props[i + 2] ? style2[props[i]] = props[i + 2] : style2.removeProperty(props[i].substr(0, 2) === "--" ? props[i] : props[i].replace(_capsExp$1, "-$1").toLowerCase());
+    props[i + 1] ? target[props[i]] = props[i + 2] : props[i + 2] ? style[props[i]] = props[i + 2] : style.removeProperty(props[i].substr(0, 2) === "--" ? props[i] : props[i].replace(_capsExp$1, "-$1").toLowerCase());
   }
   if (this.tfm) {
     for (p in this.tfm) {
@@ -3453,8 +3279,8 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
       target.setAttribute("data-svg-origin", this.svgo || "");
     }
     i = _reverting();
-    if ((!i || !i.isStart) && !style2[_transformProp$1]) {
-      _removeIndependentTransforms(style2);
+    if ((!i || !i.isStart) && !style[_transformProp$1]) {
+      _removeIndependentTransforms(style);
       cache.uncache = 1;
     }
   }
@@ -3536,17 +3362,17 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   return !!(e.getCTM && (!e.parentNode || e.ownerSVGElement) && _getBBox(e));
 }, _removeProperty = function _removeProperty2(target, property) {
   if (property) {
-    var style2 = target.style;
+    var style = target.style;
     if (property in _transformProps && property !== _transformOriginProp) {
       property = _transformProp$1;
     }
-    if (style2.removeProperty) {
+    if (style.removeProperty) {
       if (property.substr(0, 2) === "ms" || property.substr(0, 6) === "webkit") {
         property = "-" + property;
       }
-      style2.removeProperty(property.replace(_capsExp$1, "-$1").toLowerCase());
+      style.removeProperty(property.replace(_capsExp$1, "-$1").toLowerCase());
     } else {
-      style2.removeAttribute(property);
+      style.removeAttribute(property);
     }
   }
 }, _addNonTweeningPT = function _addNonTweeningPT2(plugin2, target, property, beginning, end, onlySetAtEnd) {
@@ -3564,7 +3390,7 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   grid: 1,
   flex: 1
 }, _convertToUnit = function _convertToUnit2(target, property, value, unit) {
-  var curValue = parseFloat(value) || 0, curUnit = (value + "").trim().substr((curValue + "").length) || "px", style2 = _tempDiv.style, horizontal = _horizontalExp.test(property), isRootSVG = target.tagName.toLowerCase() === "svg", measureProperty = (isRootSVG ? "client" : "offset") + (horizontal ? "Width" : "Height"), amount = 100, toPixels = unit === "px", toPercent = unit === "%", px, parent, cache, isSVG;
+  var curValue = parseFloat(value) || 0, curUnit = (value + "").trim().substr((curValue + "").length) || "px", style = _tempDiv.style, horizontal = _horizontalExp.test(property), isRootSVG = target.tagName.toLowerCase() === "svg", measureProperty = (isRootSVG ? "client" : "offset") + (horizontal ? "Width" : "Height"), amount = 100, toPixels = unit === "px", toPercent = unit === "%", px, parent, cache, isSVG;
   if (unit === curUnit || !curValue || _nonConvertibleUnits[unit] || _nonConvertibleUnits[curUnit]) {
     return curValue;
   }
@@ -3574,7 +3400,7 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
     px = isSVG ? target.getBBox()[horizontal ? "width" : "height"] : target[measureProperty];
     return _round$1(toPercent ? curValue / px * amount : curValue / 100 * px);
   }
-  style2[horizontal ? "width" : "height"] = amount + (toPixels ? curUnit : unit);
+  style[horizontal ? "width" : "height"] = amount + (toPixels ? curUnit : unit);
   parent = ~property.indexOf("adius") || unit === "em" && target.appendChild && !isRootSVG ? target : target.parentNode;
   if (isSVG) {
     parent = (target.ownerSVGElement || {}).parentNode;
@@ -3586,12 +3412,12 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   if (cache && toPercent && cache.width && horizontal && cache.time === _ticker.time && !cache.uncache) {
     return _round$1(curValue / cache.width * amount);
   } else {
-    (toPercent || curUnit === "%") && !_nonStandardLayouts[_getComputedProperty(parent, "display")] && (style2.position = _getComputedProperty(target, "position"));
-    parent === target && (style2.position = "static");
+    (toPercent || curUnit === "%") && !_nonStandardLayouts[_getComputedProperty(parent, "display")] && (style.position = _getComputedProperty(target, "position"));
+    parent === target && (style.position = "static");
     parent.appendChild(_tempDiv);
     px = _tempDiv[measureProperty];
     parent.removeChild(_tempDiv);
-    style2.position = "absolute";
+    style.position = "absolute";
     if (horizontal && toPercent) {
       cache = _getCache(parent);
       cache.time = _ticker.time;
@@ -3704,9 +3530,9 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   return split.join(" ");
 }, _renderClearProps = function _renderClearProps2(ratio, data2) {
   if (data2.tween && data2.tween._time === data2.tween._dur) {
-    var target = data2.t, style2 = target.style, props = data2.u, cache = target._gsap, prop, clearTransforms, i;
+    var target = data2.t, style = target.style, props = data2.u, cache = target._gsap, prop, clearTransforms, i;
     if (props === "all" || props === true) {
-      style2.cssText = "";
+      style.cssText = "";
       clearTransforms = 1;
     } else {
       props = props.split(",");
@@ -3726,7 +3552,7 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
         cache.svg && target.removeAttribute("transform");
         _parseTransform(target, 1);
         cache.uncache = 1;
-        _removeIndependentTransforms(style2);
+        _removeIndependentTransforms(style);
       }
     }
   }
@@ -3810,14 +3636,14 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   var matrixString = _getComputedProperty(target, _transformProp$1);
   return _isNullTransform(matrixString) ? _identity2DMatrix : matrixString.substr(7).match(_numExp).map(_round$1);
 }, _getMatrix = function _getMatrix2(target, force2D) {
-  var cache = target._gsap || _getCache(target), style2 = target.style, matrix = _getComputedTransformMatrixAsArray(target), parent, nextSibling, temp, addedToDOM;
+  var cache = target._gsap || _getCache(target), style = target.style, matrix = _getComputedTransformMatrixAsArray(target), parent, nextSibling, temp, addedToDOM;
   if (cache.svg && target.getAttribute("transform")) {
     temp = target.transform.baseVal.consolidate().matrix;
     matrix = [temp.a, temp.b, temp.c, temp.d, temp.e, temp.f];
     return matrix.join(",") === "1,0,0,1,0,0" ? _identity2DMatrix : matrix;
   } else if (matrix === _identity2DMatrix && !target.offsetParent && target !== _docElement && !cache.svg) {
-    temp = style2.display;
-    style2.display = "block";
+    temp = style.display;
+    style.display = "block";
     parent = target.parentNode;
     if (!parent || !target.offsetParent) {
       addedToDOM = 1;
@@ -3825,7 +3651,7 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
       _docElement.appendChild(target);
     }
     matrix = _getComputedTransformMatrixAsArray(target);
-    temp ? style2.display = temp : _removeProperty(target, "display");
+    temp ? style.display = temp : _removeProperty(target, "display");
     if (addedToDOM) {
       nextSibling ? parent.insertBefore(target, nextSibling) : parent ? parent.appendChild(target) : _docElement.removeChild(target);
     }
@@ -3869,15 +3695,15 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   if ("x" in cache && !uncache && !cache.uncache) {
     return cache;
   }
-  var style2 = target.style, invertedScaleX = cache.scaleX < 0, px = "px", deg = "deg", cs = getComputedStyle(target), origin = _getComputedProperty(target, _transformOriginProp) || "0", x, y, z, scaleX, scaleY, rotation, rotationX, rotationY, skewX, skewY, perspective, xOrigin, yOrigin, matrix, angle, cos, sin, a, b, c, d, a12, a22, t1, t2, t3, a13, a23, a33, a42, a43, a32;
+  var style = target.style, invertedScaleX = cache.scaleX < 0, px = "px", deg = "deg", cs = getComputedStyle(target), origin = _getComputedProperty(target, _transformOriginProp) || "0", x, y, z, scaleX, scaleY, rotation, rotationX, rotationY, skewX, skewY, perspective, xOrigin, yOrigin, matrix, angle, cos, sin, a, b, c, d, a12, a22, t1, t2, t3, a13, a23, a33, a42, a43, a32;
   x = y = z = rotation = rotationX = rotationY = skewX = skewY = perspective = 0;
   scaleX = scaleY = 1;
   cache.svg = !!(target.getCTM && _isSVG(target));
   if (cs.translate) {
     if (cs.translate !== "none" || cs.scale !== "none" || cs.rotate !== "none") {
-      style2[_transformProp$1] = (cs.translate !== "none" ? "translate3d(" + (cs.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (cs.rotate !== "none" ? "rotate(" + cs.rotate + ") " : "") + (cs.scale !== "none" ? "scale(" + cs.scale.split(" ").join(",") + ") " : "") + (cs[_transformProp$1] !== "none" ? cs[_transformProp$1] : "");
+      style[_transformProp$1] = (cs.translate !== "none" ? "translate3d(" + (cs.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (cs.rotate !== "none" ? "rotate(" + cs.rotate + ") " : "") + (cs.scale !== "none" ? "scale(" + cs.scale.split(" ").join(",") + ") " : "") + (cs[_transformProp$1] !== "none" ? cs[_transformProp$1] : "");
     }
-    style2.scale = style2.rotate = style2.translate = "none";
+    style.scale = style.rotate = style.translate = "none";
   }
   matrix = _getMatrix(target, cache.svg);
   if (cache.svg) {
@@ -3999,7 +3825,7 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   cache.skewY = skewY + deg;
   cache.transformPerspective = perspective + px;
   if (cache.zOrigin = parseFloat(origin.split(" ")[2]) || 0) {
-    style2[_transformOriginProp] = _firstTwoOnly(origin);
+    style[_transformOriginProp] = _firstTwoOnly(origin);
   }
   cache.xOffset = cache.yOffset = 0;
   cache.force3D = _config$1.force3D;
@@ -4133,19 +3959,19 @@ var _doc$2, _docElement, _tempDiv, _recentSetterPlugin, _reverting, _transformPr
   }
   return target;
 }, _addRawTransformPTs = function _addRawTransformPTs2(plugin2, transforms, target) {
-  var startCache = _assign({}, target._gsap), exclude = "perspective,force3D,transformOrigin,svgOrigin", style2 = target.style, endCache, p, startValue, endValue, startNum, endNum, startUnit, endUnit;
+  var startCache = _assign({}, target._gsap), exclude = "perspective,force3D,transformOrigin,svgOrigin", style = target.style, endCache, p, startValue, endValue, startNum, endNum, startUnit, endUnit;
   if (startCache.svg) {
     startValue = target.getAttribute("transform");
     target.setAttribute("transform", "");
-    style2[_transformProp$1] = transforms;
+    style[_transformProp$1] = transforms;
     endCache = _parseTransform(target, 1);
     _removeProperty(target, _transformProp$1);
     target.setAttribute("transform", startValue);
   } else {
     startValue = getComputedStyle(target)[_transformProp$1];
-    style2[_transformProp$1] = transforms;
+    style[_transformProp$1] = transforms;
     endCache = _parseTransform(target, 1);
-    style2[_transformProp$1] = startValue;
+    style[_transformProp$1] = startValue;
   }
   for (p in _transformProps) {
     startValue = startCache[p];
@@ -4190,7 +4016,7 @@ var CSSPlugin = {
     return target.style && target.nodeType;
   },
   init: function init3(target, vars, tween, index, targets) {
-    var props = this._props, style2 = target.style, startAt = tween.vars.startAt, startValue, endValue, endNum, startNum, type, specialProp, p, startUnit, endUnit, relative, isTransformRelated, transformPropTween, cache, smooth, hasPriority, inlineProps;
+    var props = this._props, style = target.style, startAt = tween.vars.startAt, startValue, endValue, endNum, startNum, type, specialProp, p, startUnit, endUnit, relative, isTransformRelated, transformPropTween, cache, smooth, hasPriority, inlineProps;
     this.styles = this.styles || _getStyleSaver(target);
     inlineProps = this.styles.props;
     this.tween = tween;
@@ -4199,7 +4025,7 @@ var CSSPlugin = {
         continue;
       }
       endValue = vars[p];
-      if (_plugins$1[p] && _checkPlugin(p, vars, tween, index, target, targets)) {
+      if (_plugins[p] && _checkPlugin(p, vars, tween, index, target, targets)) {
         continue;
       }
       type = typeof endValue;
@@ -4222,9 +4048,9 @@ var CSSPlugin = {
           endUnit = getUnit(endValue);
         }
         endUnit ? startUnit !== endUnit && (startValue = _convertToUnit(target, p, startValue, endUnit) + endUnit) : startUnit && (endValue += startUnit);
-        this.add(style2, "setProperty", startValue, endValue, index, targets, 0, 0, p);
+        this.add(style, "setProperty", startValue, endValue, index, targets, 0, 0, p);
         props.push(p);
-        inlineProps.push(p, 0, style2[p]);
+        inlineProps.push(p, 0, style[p]);
       } else if (type !== "undefined") {
         if (startAt && p in startAt) {
           startValue = typeof startAt[p] === "function" ? startAt[p].call(tween, index, target, targets) : startAt[p];
@@ -4243,8 +4069,8 @@ var CSSPlugin = {
             if (startNum === 1 && _get(target, "visibility") === "hidden" && endNum) {
               startNum = 0;
             }
-            inlineProps.push("visibility", 0, style2.visibility);
-            _addNonTweeningPT(this, style2, "visibility", startNum ? "inherit" : "hidden", endNum ? "inherit" : "hidden", !endNum);
+            inlineProps.push("visibility", 0, style.visibility);
+            _addNonTweeningPT(this, style, "visibility", startNum ? "inherit" : "hidden", endNum ? "inherit" : "hidden", !endNum);
           }
           if (p !== "scale" && p !== "transform") {
             p = _propertyAliases[p];
@@ -4258,7 +4084,7 @@ var CSSPlugin = {
             cache = target._gsap;
             cache.renderTransform && !vars.parseTransform || _parseTransform(target, vars.parseTransform);
             smooth = vars.smoothOrigin !== false && cache.smooth;
-            transformPropTween = this._pt = new PropTween(this._pt, style2, _transformProp$1, 0, 1, cache.renderTransform, cache, 0, -1);
+            transformPropTween = this._pt = new PropTween(this._pt, style, _transformProp$1, 0, 1, cache.renderTransform, cache, 0, -1);
             transformPropTween.dep = 1;
           }
           if (p === "scale") {
@@ -4267,14 +4093,14 @@ var CSSPlugin = {
             props.push("scaleY", p);
             p += "X";
           } else if (p === "transformOrigin") {
-            inlineProps.push(_transformOriginProp, 0, style2[_transformOriginProp]);
+            inlineProps.push(_transformOriginProp, 0, style[_transformOriginProp]);
             endValue = _convertKeywordsToPercentages(endValue);
             if (cache.svg) {
               _applySVGOrigin(target, endValue, 0, smooth, 0, this);
             } else {
               endUnit = parseFloat(endValue.split(" ")[2]) || 0;
               endUnit !== cache.zOrigin && _addNonTweeningPT(this, cache, "zOrigin", cache.zOrigin, endUnit);
-              _addNonTweeningPT(this, style2, p, _firstTwoOnly(startValue), _firstTwoOnly(endValue));
+              _addNonTweeningPT(this, style, p, _firstTwoOnly(startValue), _firstTwoOnly(endValue));
             }
             continue;
           } else if (p === "svgOrigin") {
@@ -4293,21 +4119,21 @@ var CSSPlugin = {
             _addRawTransformPTs(this, endValue, target);
             continue;
           }
-        } else if (!(p in style2)) {
+        } else if (!(p in style)) {
           p = _checkPropPrefix(p) || p;
         }
-        if (isTransformRelated || (endNum || endNum === 0) && (startNum || startNum === 0) && !_complexExp.test(endValue) && p in style2) {
+        if (isTransformRelated || (endNum || endNum === 0) && (startNum || startNum === 0) && !_complexExp.test(endValue) && p in style) {
           startUnit = (startValue + "").substr((startNum + "").length);
           endNum || (endNum = 0);
           endUnit = getUnit(endValue) || (p in _config$1.units ? _config$1.units[p] : startUnit);
           startUnit !== endUnit && (startNum = _convertToUnit(target, p, startValue, endUnit));
-          this._pt = new PropTween(this._pt, isTransformRelated ? cache : style2, p, startNum, (relative ? _parseRelative(startNum, relative + endNum) : endNum) - startNum, !isTransformRelated && (endUnit === "px" || p === "zIndex") && vars.autoRound !== false ? _renderRoundedCSSProp : _renderCSSProp);
+          this._pt = new PropTween(this._pt, isTransformRelated ? cache : style, p, startNum, (relative ? _parseRelative(startNum, relative + endNum) : endNum) - startNum, !isTransformRelated && (endUnit === "px" || p === "zIndex") && vars.autoRound !== false ? _renderRoundedCSSProp : _renderCSSProp);
           this._pt.u = endUnit || 0;
           if (startUnit !== endUnit && endUnit !== "%") {
             this._pt.b = startValue;
             this._pt.r = _renderCSSPropWithBeginning;
           }
-        } else if (!(p in style2)) {
+        } else if (!(p in style)) {
           if (p in target) {
             this.add(target, p, startValue || target[p], relative ? relative + endValue : endValue, index, targets);
           } else if (p !== "parseTransform") {
@@ -4317,7 +4143,7 @@ var CSSPlugin = {
         } else {
           _tweenComplexCSSString.call(this, target, p, startValue, relative ? relative + endValue : endValue);
         }
-        isTransformRelated || (p in style2 ? inlineProps.push(p, 0, style2[p]) : inlineProps.push(p, 1, startValue || target[p]));
+        isTransformRelated || (p in style ? inlineProps.push(p, 0, style[p]) : inlineProps.push(p, 1, startValue || target[p]));
         props.push(p);
       }
     }
@@ -4421,7 +4247,7 @@ const _routes = [
     meta: __nuxt_page_meta$4 || {},
     alias: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.alias) || [],
     redirect: (__nuxt_page_meta$4 == null ? void 0 : __nuxt_page_meta$4.redirect) || void 0,
-    component: () => import("./_nuxt/about-ee97d471.js").then((m) => m.default || m)
+    component: () => import("./_nuxt/about-35a6bda3.js").then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.name) ?? "contact",
@@ -4429,7 +4255,7 @@ const _routes = [
     meta: __nuxt_page_meta$3 || {},
     alias: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.alias) || [],
     redirect: (__nuxt_page_meta$3 == null ? void 0 : __nuxt_page_meta$3.redirect) || void 0,
-    component: () => import("./_nuxt/contact-d42f87a5.js").then((m) => m.default || m)
+    component: () => import("./_nuxt/contact-b6f2c84d.js").then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$2 == null ? void 0 : __nuxt_page_meta$2.name) ?? "index",
@@ -4437,7 +4263,7 @@ const _routes = [
     meta: __nuxt_page_meta$2 || {},
     alias: (__nuxt_page_meta$2 == null ? void 0 : __nuxt_page_meta$2.alias) || [],
     redirect: (__nuxt_page_meta$2 == null ? void 0 : __nuxt_page_meta$2.redirect) || void 0,
-    component: () => import("./_nuxt/index-0bf8e552.js").then((m) => m.default || m)
+    component: () => import("./_nuxt/index-2eecaac4.js").then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta$1 == null ? void 0 : __nuxt_page_meta$1.name) ?? "services-slug",
@@ -4445,7 +4271,7 @@ const _routes = [
     meta: __nuxt_page_meta$1 || {},
     alias: (__nuxt_page_meta$1 == null ? void 0 : __nuxt_page_meta$1.alias) || [],
     redirect: (__nuxt_page_meta$1 == null ? void 0 : __nuxt_page_meta$1.redirect) || void 0,
-    component: () => import("./_nuxt/_slug_-7abe175a.js").then((m) => m.default || m)
+    component: () => import("./_nuxt/_slug_-d7086272.js").then((m) => m.default || m)
   },
   {
     name: (__nuxt_page_meta == null ? void 0 : __nuxt_page_meta.name) ?? "services",
@@ -4453,9 +4279,13 @@ const _routes = [
     meta: __nuxt_page_meta || {},
     alias: (__nuxt_page_meta == null ? void 0 : __nuxt_page_meta.alias) || [],
     redirect: (__nuxt_page_meta == null ? void 0 : __nuxt_page_meta.redirect) || void 0,
-    component: () => import("./_nuxt/index-fbad31fe.js").then((m) => m.default || m)
+    component: () => import("./_nuxt/index-3dc43dee.js").then((m) => m.default || m)
   }
 ];
+const appHead = { "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "charset": "utf-8" }], "link": [], "style": [], "script": [], "noscript": [], "charset": "utf-8", "viewport": "width=device-width, initial-scale=1" };
+const appLayoutTransition = false;
+const appPageTransition = false;
+const appKeepalive = false;
 const routerOptions0 = {
   scrollBehavior(to, from, savedPosition) {
     const nuxtApp = useNuxtApp();
@@ -4494,12 +4324,15 @@ function _getHashElementScrollMarginTop(selector3) {
   }
   return 0;
 }
-function _isDifferentRoute(a, b) {
-  const samePageComponent = a.matched[0] === b.matched[0];
+function _isDifferentRoute(from, to) {
+  const samePageComponent = to.matched.every((comp, index) => {
+    var _a, _b, _c;
+    return ((_a = comp.components) == null ? void 0 : _a.default) === ((_c = (_b = from.matched[index]) == null ? void 0 : _b.components) == null ? void 0 : _c.default);
+  });
   if (!samePageComponent) {
     return true;
   }
-  if (samePageComponent && JSON.stringify(a.params) !== JSON.stringify(b.params)) {
+  if (samePageComponent && JSON.stringify(from.params) !== JSON.stringify(to.params)) {
     return true;
   }
   return false;
@@ -4515,7 +4348,6 @@ const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
   if (!((_a = to.meta) == null ? void 0 : _a.validate)) {
     return;
   }
-  useNuxtApp();
   useRouter();
   const result = ([__temp, __restore] = executeAsync(() => Promise.resolve(to.meta.validate(to))), __temp = await __temp, __restore(), __temp);
   if (result === true) {
@@ -4578,9 +4410,11 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     });
     const route = {};
     for (const key in _route.value) {
-      route[key] = computed(() => _route.value[key]);
+      Object.defineProperty(route, key, {
+        get: () => _route.value[key]
+      });
     }
-    nuxtApp._route = reactive(route);
+    nuxtApp._route = shallowReactive(route);
     nuxtApp._middleware = nuxtApp._middleware || {
       global: [],
       named: {}
@@ -4658,7 +4492,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
           fatal: false,
           statusMessage: `Page not found: ${to.fullPath}`
         })));
-      } else if (to.redirectedFrom) {
+      } else if (to.redirectedFrom && to.fullPath !== initialURL) {
         await nuxtApp.runWithContext(() => navigateTo(to.fullPath || "/"));
       }
     });
@@ -4677,15 +4511,168 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     });
     return { provide: { router } };
   }
-}, 1);
-const _plugins = [
+});
+function resolveUnref(r) {
+  return typeof r === "function" ? r() : unref(r);
+}
+function resolveUnrefHeadInput(ref3, lastKey = "") {
+  if (ref3 instanceof Promise)
+    return ref3;
+  const root = resolveUnref(ref3);
+  if (!ref3 || !root)
+    return root;
+  if (Array.isArray(root))
+    return root.map((r) => resolveUnrefHeadInput(r, lastKey));
+  if (typeof root === "object") {
+    return Object.fromEntries(
+      Object.entries(root).map(([k, v]) => {
+        if (k === "titleTemplate" || k.startsWith("on"))
+          return [k, unref(v)];
+        return [k, resolveUnrefHeadInput(v, k)];
+      })
+    );
+  }
+  return root;
+}
+const Vue3 = version.startsWith("3");
+const headSymbol = "usehead";
+function injectHead() {
+  return getCurrentInstance() && inject(headSymbol) || getActiveHead();
+}
+function vueInstall(head) {
+  const plugin2 = {
+    install(app) {
+      if (Vue3) {
+        app.config.globalProperties.$unhead = head;
+        app.config.globalProperties.$head = head;
+        app.provide(headSymbol, head);
+      }
+    }
+  };
+  return plugin2.install;
+}
+function createServerHead(options = {}) {
+  const head = createServerHead$1({
+    ...options,
+    plugins: [
+      VueReactiveUseHeadPlugin(),
+      ...(options == null ? void 0 : options.plugins) || []
+    ]
+  });
+  head.install = vueInstall(head);
+  return head;
+}
+function VueReactiveUseHeadPlugin() {
+  return defineHeadPlugin({
+    hooks: {
+      "entries:resolve": function(ctx) {
+        for (const entry2 of ctx.entries)
+          entry2.resolvedInput = resolveUnrefHeadInput(entry2.input);
+      }
+    }
+  });
+}
+function clientUseHead(input, options = {}) {
+  const head = injectHead();
+  const deactivated = ref(false);
+  const resolvedInput = ref({});
+  watchEffect(() => {
+    resolvedInput.value = deactivated.value ? {} : resolveUnrefHeadInput(input);
+  });
+  const entry2 = head.push(resolvedInput.value, options);
+  watch(resolvedInput, (e) => {
+    entry2.patch(e);
+  });
+  getCurrentInstance();
+  return entry2;
+}
+function serverUseHead(input, options = {}) {
+  const head = injectHead();
+  return head.push(input, options);
+}
+function useHead(input, options = {}) {
+  var _a;
+  const head = injectHead();
+  if (head) {
+    const isBrowser = !!((_a = head.resolvedOptions) == null ? void 0 : _a.document);
+    if (options.mode === "server" && isBrowser || options.mode === "client" && !isBrowser)
+      return;
+    return isBrowser ? clientUseHead(input, options) : serverUseHead(input, options);
+  }
+}
+function useSeoMeta(input, options) {
+  const headInput = ref({});
+  watchEffect(() => {
+    const resolvedMeta = resolveUnrefHeadInput(input);
+    const { title, titleTemplate, ...meta } = resolvedMeta;
+    headInput.value = {
+      title,
+      titleTemplate,
+      meta: unpackMeta(meta)
+    };
+  });
+  return useHead(headInput, options);
+}
+const coreComposableNames = [
+  "injectHead"
+];
+({
+  "@unhead/vue": [...coreComposableNames, ...composableNames]
+});
+function definePayloadReducer(name, reduce) {
+  {
+    useNuxtApp().ssrContext._payloadReducers[name] = reduce;
+  }
+}
+const reducers = {
+  NuxtError: (data2) => isNuxtError(data2) && data2.toJSON(),
+  EmptyShallowRef: (data2) => isRef(data2) && isShallow(data2) && !data2.value && (typeof data2.value === "bigint" ? "0n" : JSON.stringify(data2.value) || "_"),
+  EmptyRef: (data2) => isRef(data2) && !data2.value && (typeof data2.value === "bigint" ? "0n" : JSON.stringify(data2.value) || "_"),
+  ShallowRef: (data2) => isRef(data2) && isShallow(data2) && data2.value,
+  ShallowReactive: (data2) => isReactive(data2) && isShallow(data2) && toRaw(data2),
+  Ref: (data2) => isRef(data2) && data2.value,
+  Reactive: (data2) => isReactive(data2) && toRaw(data2)
+};
+const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
+  name: "nuxt:revive-payload:server",
+  setup() {
+    for (const reducer in reducers) {
+      definePayloadReducer(reducer, reducers[reducer]);
+    }
+  }
+});
+const components_plugin_KR1HBZs4kY = /* @__PURE__ */ defineNuxtPlugin({
+  name: "nuxt:global-components"
+});
+const unhead_KgADcZ0jPj = /* @__PURE__ */ defineNuxtPlugin({
+  name: "nuxt:head",
+  setup(nuxtApp) {
+    const createHead = createServerHead;
+    const head = createHead();
+    head.push(appHead);
+    nuxtApp.vueApp.use(head);
+    {
+      nuxtApp.ssrContext.renderMeta = async () => {
+        const meta = await renderSSRHead(head);
+        return {
+          ...meta,
+          bodyScriptsPrepend: meta.bodyTagsOpen,
+          // resolves naming difference with NuxtMeta and Unhead
+          bodyScripts: meta.bodyTags
+        };
+      };
+    }
+  }
+});
+const plugins = [
+  plugin,
   revive_payload_server_eJ33V7gbc6,
   components_plugin_KR1HBZs4kY,
-  unhead_KgADcZ0jPj,
-  plugin
+  unhead_KgADcZ0jPj
 ];
 const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
 const DEFAULT_EXTERNAL_REL_ATTRIBUTE = "noopener noreferrer";
+/*! @__NO_SIDE_EFFECTS__ */
 function defineNuxtLink(options) {
   const componentName = options.componentName || "NuxtLink";
   const resolveTrailingSlashBehavior = (to, resolve) => {
@@ -4874,7 +4861,7 @@ function defineNuxtLink(options) {
     }
   });
 }
-const __nuxt_component_0$1 = /* @__PURE__ */ defineNuxtLink({ componentName: "NuxtLink" });
+const __nuxt_component_1$2 = /* @__PURE__ */ defineNuxtLink({ componentName: "NuxtLink" });
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -4882,8 +4869,8 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const _sfc_main$5 = {};
-function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
+const _sfc_main$6 = {};
+function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs) {
   _push(`<svg${ssrRenderAttrs(mergeProps({
     "aria-hidden": "true",
     width: "76",
@@ -4893,14 +4880,14 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
     xmlns: "http://www.w3.org/2000/svg"
   }, _attrs))}><path d="M69.3496 32C69.3496 49.535 55.1346 63.75 37.5996 63.75C20.0646 63.75 5.84961 49.535 5.84961 32C5.84961 14.465 20.0646 0.25 37.5996 0.25C55.1346 0.25 69.3496 14.465 69.3496 32Z" fill="#FF85A5" stroke="#FF85A5" stroke-width="0.5"></path><path d="M54.6256 32.4C54.6256 38.869 52.6878 44.7157 49.5671 48.9392C46.4463 53.1628 42.1551 55.75 37.4378 55.75C32.7204 55.75 28.4292 53.1628 25.3085 48.9392C22.1877 44.7157 20.25 38.869 20.25 32.4C20.25 25.9311 22.1877 20.0844 25.3085 15.8609C28.4292 11.6373 32.7204 9.05005 37.4378 9.05005C42.1551 9.05005 46.4463 11.6373 49.5671 15.8609C52.6878 20.0844 54.6256 25.9311 54.6256 32.4Z" fill="#FFECF0" stroke="#F48BAF" stroke-width="0.5"></path><path d="M43.9066 41.839C44.2354 41.7676 44.524 41.694 44.8174 41.6431C45.603 41.503 46.404 41.4543 47.2023 41.498C48.3194 41.5633 49.4317 41.536 50.5149 41.2391C50.8599 41.1442 51.1847 40.984 51.5159 40.8495C51.5797 40.8187 51.6349 40.7742 51.6771 40.7197C50.6366 41.0994 49.5743 41.066 48.4975 40.8845C48.5829 40.8746 48.6676 40.8609 48.7538 40.8571C49.5284 40.8268 50.2933 40.741 51.0186 40.4645C51.977 40.1008 52.6661 39.504 52.8773 38.5077C52.8833 38.483 52.8923 38.4591 52.9039 38.4363C52.9087 38.4272 52.9232 38.4219 52.9538 38.4006C53.0177 38.8134 53.0158 39.2329 52.9482 39.6452C52.6516 41.3272 51.4974 42.2612 49.8524 42.7442C49.2326 42.9317 48.5873 43.034 47.9365 43.0479C47.4151 43.0555 46.8887 43.0661 46.3737 43.1124C45.5274 43.1884 44.6811 43.2772 43.8421 43.3965C43.3989 43.4627 42.9631 43.5674 42.5404 43.7093C41.9859 43.8908 41.4346 44.0943 40.955 44.4261C40.4657 44.7629 40.0695 45.2057 39.8001 45.7171C39.7839 45.6704 39.7744 45.6218 39.7718 45.5728C39.9073 44.8709 40.1384 44.1884 40.4594 43.5423C40.6625 43.1398 40.9027 42.7533 41.1453 42.3706C42.3462 40.482 44.0831 39.1493 46.1545 38.2009C47.1644 37.7392 48.2372 37.3982 49.2793 36.9973C50.2715 36.6176 51.2137 36.1552 52.0245 35.4786C52.5913 35.0089 53.0396 34.426 53.3367 33.7723C53.4979 33.4116 53.572 33.0129 53.6784 32.6294C53.7185 32.4852 53.7372 32.3365 53.734 32.1875C53.0022 34.0699 51.5974 35.3328 49.7105 36.1605C48.919 36.5083 47.789 36.8272 47.3498 36.8158C50.2344 34.48 51.9939 31.5701 52.6919 28.0938C52.5844 28.3909 52.4799 28.6878 52.3784 28.9845C52.1358 29.6411 51.8142 30.2694 51.42 30.8571C50.211 32.7274 48.7957 34.4428 47.0556 35.9076C45.8555 36.9183 44.6425 37.9161 43.4601 38.9451C42.0899 40.1373 40.8591 41.4441 39.8581 42.9348C38.9288 44.3206 38.3702 45.8173 38.3372 47.4651C38.3094 48.4237 38.5099 49.376 38.9239 50.252C38.9425 50.2915 38.957 50.3279 38.9731 50.372L38.9143 50.4213C38.8675 50.356 38.8248 50.2862 38.7724 50.2254C38.1421 49.4964 37.7794 48.6543 37.5965 47.74C37.2612 46.0641 37.4909 44.4277 38.0148 42.8178C38.7523 40.5504 40.0161 38.5654 41.6716 36.7892C43.34 35.0017 44.8093 33.0851 45.9659 30.9634C47.0306 29.0374 47.7713 26.9672 48.1614 24.827C48.3741 23.6611 48.4645 22.4784 48.4314 21.2959C48.4232 20.6079 48.3769 19.9208 48.2928 19.2373C48.0785 17.721 47.6888 16.2314 47.1305 14.795C46.7944 13.9362 46.4785 13.0629 46.0465 12.2466C44.8802 10.0444 43.323 8.11566 41.2533 6.5863C40.1873 5.78559 38.9194 5.25868 37.5731 5.05694C36.6831 4.91895 35.7736 4.93748 34.8908 5.11162C33.9744 5.29462 33.2119 5.75556 32.605 6.41544C32.2761 6.77386 31.9529 7.16645 31.7571 7.59701C31.4024 8.37612 31.3662 9.21142 31.5451 10.0475C31.5967 10.2867 31.6628 10.5236 31.7361 10.8213C31.6426 10.7453 31.587 10.7089 31.5419 10.6633C31.1806 10.2941 30.9205 9.84728 30.7842 9.36177C30.6732 8.98027 30.5897 8.5921 30.5344 8.19995C30.5021 7.93649 30.4981 7.67064 30.5223 7.40641C30.569 6.69033 30.6988 5.98944 31.0196 5.33031C31.0325 5.30222 31.0422 5.27336 31.0567 5.23691C30.773 5.35689 30.2853 6.54378 30.1862 7.02142C30.0382 7.68312 30.0223 8.36503 30.1395 9.03221C30.2651 9.69078 30.5254 10.3201 30.9059 10.8851C29.8557 9.97154 29.1569 8.87198 28.9667 7.5226C28.754 5.98109 29.5414 4.45173 30.4465 3.52606C30.2466 4.01813 30.0226 4.51324 29.8461 5.02125C29.6696 5.52927 29.5237 6.06158 29.5793 6.62503C29.6106 6.56247 29.6375 6.49804 29.6599 6.43215C29.967 5.2445 30.5384 4.19582 31.5137 3.37343C32.5486 2.49652 33.8285 1.91731 35.2019 1.70435C37.0887 1.40061 38.8579 1.78408 40.5512 2.54952C42.6323 3.48961 44.3604 4.8466 45.7958 6.54529C47.4473 8.49914 48.7079 10.6626 49.717 12.9642C50.4375 14.5999 50.9683 16.3042 51.2999 18.0474C51.7215 20.27 51.8641 22.5048 51.5619 24.751C51.2661 26.9722 50.5794 29.0741 49.3269 30.99C49.0045 31.4782 48.6224 31.9278 48.267 32.3948C48.2199 32.446 48.1881 32.5081 48.1751 32.5748C48.3605 32.413 48.5491 32.2543 48.7312 32.0903C49.3448 31.5313 49.8793 30.9001 50.3215 30.2124C50.999 29.1719 51.5328 28.0542 51.9101 26.8864C52.4984 25.0798 52.7749 23.2376 52.6516 21.3483C52.6395 21.1615 52.6169 20.9762 52.6177 20.7879C52.9161 21.8491 53.1295 22.93 53.2561 24.0213C53.445 25.479 53.4588 26.9521 53.2972 28.4127C53.1972 29.2609 53.0715 30.1091 52.7499 30.9125C52.4743 31.602 52.1857 32.2908 51.8472 32.9522C51.5827 33.4503 51.2247 33.8992 50.7906 34.2773C50.7552 34.3071 50.7328 34.3482 50.7277 34.3927C52.3985 33.5688 53.3931 32.2209 54.025 30.5351C54.0661 30.6353 54.0943 30.687 54.1096 30.7439C54.3614 31.6101 54.4501 32.5112 54.3716 33.4063C54.1806 35.3457 53.2432 36.8955 51.6143 38.0862C50.4956 38.9048 49.2156 39.4159 47.8882 39.8404C46.8323 40.1783 45.7926 40.5526 44.8399 41.1123C44.5522 41.2816 44.2967 41.5011 44.0291 41.7C43.9834 41.7423 43.9423 41.7889 43.9066 41.839V41.839Z" fill="#1A171C"></path><path d="M40.3488 8.43813C39.276 7.72889 38.092 7.51019 36.85 7.56411C35.6079 7.61802 34.4602 7.97796 33.5406 8.8368C33.6629 8.42665 33.9004 8.05518 34.2281 7.76154C34.5545 7.47146 34.8979 7.19733 35.2227 6.92624C34.8447 6.83891 33.6711 7.52234 33.1174 8.15945C32.5637 8.79655 32.301 9.56655 32.2252 10.3905H32.1728C32.1583 10.3236 32.1373 10.2583 32.1293 10.1907C32.0213 9.32507 32.0987 8.47838 32.5492 7.70611C32.845 7.19809 33.2254 6.74627 33.7582 6.40987C34.4949 5.94287 35.317 5.81377 36.1681 5.80694C38.0493 5.79099 39.6967 6.41443 41.1548 7.50564C42.342 8.39333 43.2504 9.51187 44.0563 10.7064C45.3385 12.5797 46.287 14.6379 46.8644 16.7995C47.0321 17.4351 47.1352 18.0904 47.2368 18.7366C47.3214 19.2788 47.3786 19.8256 47.4173 20.3723C47.4931 21.5694 47.4415 22.7706 47.2634 23.958C47.0316 25.5697 46.5987 27.15 45.9738 28.6661C44.9115 31.2555 43.3906 33.5905 41.5118 35.7198C40.6575 36.688 39.8192 37.6638 39.1237 38.7436C38.1968 40.1864 37.4496 41.6998 37.0547 43.3499C36.6598 45 36.6686 46.6493 37.3094 48.2599C37.3209 48.2936 37.3303 48.3278 37.3376 48.3624L37.2747 48.3875C37.1297 48.0883 36.9644 47.7952 36.8427 47.4877C36.3212 46.1664 36.2318 44.7995 36.4115 43.4129C36.7234 41.0072 37.7148 38.8317 39.0342 36.7829C39.8555 35.5087 40.7663 34.2861 41.6094 33.0233C42.8667 31.1386 43.8863 29.1422 44.552 26.9977C45.0227 25.525 45.285 24.0002 45.3322 22.4628C45.3516 21.6784 45.279 20.8917 45.2395 20.1088C45.2297 19.8441 45.1995 19.5804 45.1493 19.3198C45.1121 19.2115 45.0389 19.1172 44.9405 19.051C44.8099 18.963 44.6722 18.8848 44.5287 18.8171C43.7791 18.4154 42.9973 18.3873 42.2026 18.6652C41.5014 18.9128 40.805 19.1725 40.1183 19.4527C39.4316 19.7329 38.7489 20.0518 38.0638 20.3556C37.9985 20.3844 37.9316 20.4095 37.8559 20.4399C37.8345 20.4023 37.8186 20.3622 37.8083 20.3207C37.773 19.8656 37.8276 19.4083 37.9695 18.972C37.9782 18.9258 38.0052 18.8845 38.045 18.8563C38.0847 18.8281 38.1344 18.8152 38.1839 18.8202C38.8006 18.8073 39.4109 18.6987 39.9901 18.4989C40.4681 18.3425 40.9646 18.237 41.4522 18.1056C41.7029 18.038 41.9527 17.9674 42.2001 17.8892C42.8256 17.691 43.4091 17.7859 43.9467 18.1253C44.2514 18.3175 44.5262 18.5513 44.8156 18.7655C44.8752 18.8095 44.9389 18.849 45.0493 18.9234C45.0418 18.8387 45.0289 18.7546 45.0106 18.6713C44.6076 17.3379 44.1079 16.0394 43.3487 14.8411C42.3734 13.3026 41.1403 11.9912 39.4985 11.0648C38.329 10.4041 37.0692 9.96521 35.6894 9.89459C35.1394 9.86203 34.588 9.93328 34.0677 10.1042C34.0417 10.1127 34.0146 10.1175 33.9871 10.1186C33.9758 10.1186 33.9637 10.1095 33.9194 10.0898C34.0064 9.96977 34.0806 9.84751 34.1757 9.73968C34.5473 9.31444 35.0204 9.01297 35.541 8.77453C37.037 8.09111 38.5829 8.03491 40.1658 8.44725C40.1981 8.4556 40.2303 8.46623 40.2625 8.47231C40.2803 8.47003 40.2891 8.46016 40.3488 8.43813Z" fill="#1A171C"></path><path d="M28.7488 13.2116C26.7854 15.8854 25.8408 18.7611 26.4525 22.0058L26.384 22.018C26.0826 21.4067 25.7812 20.7954 25.4684 20.1636C25.3794 20.2381 25.3069 20.3285 25.2551 20.4295C25.2032 20.5305 25.173 20.6401 25.1662 20.7521C25.1033 21.2541 25.2218 21.7393 25.3975 22.2025C25.5369 22.5708 25.7263 22.9216 25.8722 23.2884C26.0286 23.6825 26.1592 24.0872 26.3034 24.4859C26.3591 24.6378 26.4203 24.7896 26.484 24.9544C26.2938 24.8625 26.2261 24.6811 26.1463 24.5094C25.9577 24.1062 25.786 23.6939 25.5756 23.3005C25.3209 22.8229 25.0832 22.3384 25.0114 21.8084C24.9672 21.4396 24.9589 21.0677 24.9864 20.6974C25.0001 20.4696 25.1476 20.276 25.329 20.1127C25.358 20.0835 25.3795 20.0483 25.3918 20.01C25.4041 19.9717 25.4069 19.9312 25.3999 19.8918C25.2242 19.3959 25.013 18.9107 24.8518 18.411C24.6802 17.8794 24.5295 17.3403 24.4077 16.7973C24.0803 15.387 23.9491 13.9424 24.0176 12.5001C24.0225 12.412 24.0289 12.3239 24.0378 12.2359C24.0378 12.2199 24.0579 12.2055 24.091 12.1599C24.4069 12.6869 24.7712 13.1577 25.2597 13.5313C25.7374 13.9092 26.2977 14.183 26.9007 14.3332L26.9394 14.2884C26.9007 14.2664 26.8588 14.2444 26.8233 14.2201C25.8924 13.6164 25.3483 12.7621 25.0558 11.7605C24.7761 10.8022 24.7447 9.82639 24.8599 8.84377C24.8681 8.79852 24.8877 8.7558 24.9171 8.71924C25.2677 10.9153 26.4509 12.4766 28.7488 13.2116Z" fill="#1A171C"></path><path d="M30.5455 32.5056C30.8308 32.7501 31.1097 33.003 31.4015 33.2392C32.7587 34.3288 34.2007 35.2773 35.9892 35.6334C36.1504 35.6646 36.2237 35.7132 36.1697 35.8855C35.3403 38.535 34.3159 41.1092 32.8321 43.5012C32.5782 43.909 32.2824 44.294 32.0035 44.6881C31.9546 44.7577 31.8913 44.8174 31.8173 44.8635C31.8234 44.8334 31.8326 44.8039 31.8448 44.7754C32.4646 43.6485 32.7491 42.4313 32.9216 41.1851C32.9812 40.7538 33.0215 40.3187 33.0529 39.8836C33.1972 37.8789 32.7184 36.0063 31.6707 34.2643C31.3612 33.7502 31.0089 33.2597 30.6761 32.7585L30.5205 32.5269L30.5455 32.5056Z" fill="#1A171C"></path><path d="M45.0603 22.7653C44.6783 22.9984 44.4453 23.3728 43.9497 23.347C43.9553 23.3639 43.9623 23.3804 43.9706 23.3963C43.9811 23.4115 43.9956 23.4237 44.0246 23.4563C43.6853 23.6393 43.3452 23.811 42.9631 23.8406C42.8148 23.8527 42.6536 23.7229 42.4916 23.6553L42.5835 23.8641L42.2361 23.6211L42.2152 23.6371C42.2684 23.7251 42.3208 23.814 42.4062 23.9568C42.1233 23.9294 41.8807 23.9355 41.6558 23.8808C40.8587 23.6826 40.0728 23.4389 39.2378 23.429C39.2209 23.429 39.204 23.413 39.1669 23.3948C39.4047 23.224 39.6505 23.0713 39.7658 22.7471C39.2128 23.0546 38.6881 23.3181 38.0498 23.1435C38.7413 23.0964 39.3112 22.8724 39.6328 22.2284C39.3176 22.0834 39.0396 22.1776 38.7518 22.2406C38.9151 22.0831 39.1337 21.987 39.3668 21.9703C39.5281 21.9545 39.691 21.9609 39.8504 21.9892C40.9649 22.2049 42.1248 22.019 43.101 21.4683C43.4088 21.2975 43.7046 21.0886 43.9069 20.7948C43.9396 20.7577 43.977 20.7246 44.0182 20.696L44.0641 20.7264C43.9335 20.933 43.8159 21.1479 43.67 21.3445C43.5241 21.5412 43.3436 21.728 43.1687 21.9315C43.7651 22.4388 44.4397 22.5428 45.1885 22.2862L45.2094 22.3325C45.0221 22.4186 44.8294 22.494 44.6323 22.558C44.4266 22.6005 44.2183 22.6307 44.0085 22.6484V22.7099L45.0603 22.7653Z" fill="#1A171C"></path><path d="M28.3786 20.7407C28.7147 20.9966 29.0129 21.2761 29.3611 21.4796C30.354 22.0575 31.4389 22.1881 32.5778 21.9846C32.9808 21.9132 33.3443 21.9785 33.6634 22.2412C33.3781 22.1774 33.0992 22.0894 32.7768 22.2222C33.1041 22.8783 33.6739 23.1046 34.3888 23.1206C34.1889 23.2375 33.8738 23.2565 33.5192 23.138C33.2379 23.0439 32.9695 22.914 32.6632 22.7864C32.7744 23.0742 33.0033 23.2352 33.2693 23.3894C33.225 23.4106 33.2048 23.4289 33.1831 23.4289C32.3771 23.438 31.6122 23.665 30.8409 23.8594C30.5886 23.9225 30.3202 23.9293 29.9994 23.9695L30.2186 23.6149L30.1969 23.599L29.8817 23.8313L29.8535 23.8055C29.8793 23.7524 29.9051 23.6984 29.9341 23.6415C29.9107 23.6415 29.8938 23.6347 29.8882 23.6415C29.6222 23.9042 29.324 23.8761 29.0064 23.7379C28.8025 23.6483 28.5978 23.5618 28.3705 23.4638L28.5623 23.3172C27.9909 23.4387 27.7563 23.0067 27.3533 22.7637L28.4011 22.7113L28.4092 22.6353C27.9788 22.6042 27.5508 22.567 27.2002 22.2898C27.9538 22.5465 28.6316 22.4417 29.2458 21.9268C28.9 21.5631 28.5664 21.191 28.3786 20.7407Z" fill="#1A171C"></path><path d="M29.2456 4.41968C27.9334 6.94304 28.621 9.14368 30.4223 11.178C29.0771 10.1483 27.9351 9.00623 27.8303 7.24375C27.4189 8.10782 27.2589 9.05946 27.3668 10.001C27.4591 10.964 27.9059 11.8663 28.6298 12.5517C27.5538 12.4864 25.559 10.5204 25.7081 9.67599C26.0458 10.5455 26.6326 11.1871 27.4466 11.667C26.7809 10.408 26.6769 9.10647 27.0315 7.76543C27.3862 6.4244 28.1349 5.32636 29.2456 4.41968Z" fill="#1A171C"></path><path d="M34.5841 20.4542C34.1674 20.2674 33.7983 20.0874 33.417 19.9348C32.412 19.5316 31.4021 19.1473 30.3938 18.7441C29.2904 18.3007 28.2861 18.4913 27.3431 19.136C27.2528 19.1975 27.1553 19.2506 27.04 19.3197C27.04 19.2742 27.04 19.2521 27.0465 19.2438C27.5704 18.7122 28.1402 18.2369 28.8503 17.9331C29.1914 17.7749 29.5819 17.7393 29.9489 17.8329C30.962 18.1017 31.9695 18.3895 32.9874 18.6409C33.3856 18.7396 33.8055 18.7601 34.2142 18.8231C34.2843 18.8337 34.3915 18.8611 34.41 18.9066C34.6091 19.3919 34.6325 19.8999 34.5841 20.4542Z" fill="#1A171C"></path><path d="M27.6812 8.54932C27.703 8.58653 30.1717 11.8009 30.1935 11.8245C30.1692 11.8589 30.1422 11.8916 30.1129 11.9224C29.8638 12.1502 29.6067 12.378 29.3657 12.6119C29.2529 12.7213 29.1811 12.7395 29.0594 12.6195C28.3662 11.9484 27.9068 11.0941 27.7424 10.1706C27.6618 9.7195 27.6755 9.25325 27.6514 8.79383C27.6544 8.71171 27.6644 8.62995 27.6812 8.54932Z" fill="#1A171C"></path><path d="M39.3934 8.13685C38.1474 7.89841 36.9037 7.8331 35.698 8.26214C34.5099 8.68587 33.5291 9.39208 32.7311 10.3436C32.4168 9.60622 33.3195 7.80956 34.1013 7.55518C33.5903 8.11179 33.2026 8.72535 33.1172 9.48244C33.9458 8.69878 34.8775 8.11559 36.0446 7.88322C36.8957 7.71236 37.7371 7.75033 38.5794 7.85437C38.8583 7.8893 39.1283 7.98801 39.4023 8.05712L39.3934 8.13685Z" fill="#1A171C"></path><path d="M32.7939 30.7009C33.0736 30.6158 33.3525 30.5293 33.6322 30.445C34.0384 30.3271 34.4732 30.3289 34.8782 30.4503C35.5367 30.6295 36.2138 30.6538 36.8932 30.6158C37.1721 30.5999 37.4469 30.4913 37.721 30.4169C38.0516 30.3265 38.4035 30.3318 38.7309 30.4321C39.0291 30.5194 39.3265 30.609 39.6779 30.713C39.4788 30.713 39.3209 30.7449 39.1846 30.7077C38.564 30.5376 37.9757 30.6477 37.3688 30.7943C36.8497 30.9196 36.3121 31.0487 35.7568 30.9029C35.3594 30.7981 34.9427 30.7616 34.5438 30.6606C34.1641 30.565 33.8014 30.6174 33.4307 30.6789C33.2227 30.713 33.0091 30.7206 32.7988 30.7404L32.7939 30.7009Z" fill="#1A171C"></path><path d="M34.8141 27.97C35.0094 27.8991 35.2264 27.9025 35.4191 27.9796C35.6118 28.0567 35.7651 28.2014 35.8466 28.3831C35.6232 28.3556 35.4019 28.3147 35.184 28.2609C35.0373 28.2168 34.9108 28.109 34.7754 28.0331L34.8141 27.97Z" fill="#1A171C"></path><path d="M35.707 32.4971C36.0407 32.4622 36.3147 32.4303 36.5896 32.4067C36.6323 32.4067 36.6783 32.4379 36.7226 32.4553C36.6871 32.4857 36.6541 32.5389 36.6162 32.5427C36.3744 32.5624 36.1382 32.5761 35.8989 32.5814C35.8481 32.5814 35.7973 32.5381 35.707 32.4971Z" fill="#1A171C"></path><path d="M37.385 28.0082L36.5508 28.3362C36.6354 28.0849 37.0634 27.914 37.385 28.0082Z" fill="#1A171C"></path><path d="M36.7331 29.6357C36.5861 29.7076 36.4228 29.7451 36.2572 29.7451C36.0915 29.7451 35.9283 29.7076 35.7812 29.6357H36.7331Z" fill="#1A171C"></path><path d="M9.41673 60.913H9.87075C10.5139 60.913 10.5812 60.8356 10.5812 60.1089V55.478H3.41777C2.76978 55.5028 2.13502 55.6727 1.55827 55.9759C0.981521 56.279 0.476849 56.7079 0.0798738 57.2323L0 57.142C1.2906 55.3576 2.67368 54.6911 3.98109 54.6911C5.48608 54.6911 8.90385 55.2071 10.4635 55.2071H10.598V51.105C10.598 50.3784 10.5308 50.301 9.88756 50.301H9.41673V50.1634H14.7809C14.9588 50.1405 15.1384 50.1899 15.2812 50.301V50.301L15.2391 49.6001H15.361L15.6049 53.7021H15.361L15.3358 52.6315C15.2559 50.9975 14.5581 50.4386 13.2675 50.4386H11.3505C11.5423 50.6537 11.6487 50.9343 11.649 51.2254V55.1942H12.1871C12.9396 55.1942 13.6374 55.0394 13.6374 53.5904V53.0572H13.7594V57.916H13.6543V57.0861C13.6543 55.6328 12.9564 55.4651 12.2039 55.4651H11.649V59.9627C11.6487 60.2539 11.5423 60.5344 11.3505 60.7496V60.7496H14.0284C15.319 60.7496 15.937 60.1605 16.0337 58.7072L16.1135 57.4946H16.3279L16.1009 61.5967H15.979L16.021 60.8958C15.8784 61.0034 15.7009 61.0511 15.525 61.0291H9.41673V60.913Z" fill="#1A171C"></path><path d="M22.3311 50.2534C22.3311 49.9653 22.1881 49.8019 21.9107 49.8019H21.2927V49.6643H22.062C22.6127 49.6643 23.2727 49.4837 23.2727 48.8602V48.8H23.3778V57.1117C23.36 57.3019 23.3817 57.4938 23.4416 57.6749C23.5014 57.8559 23.5981 58.0219 23.7251 58.162C23.8522 58.3021 24.0068 58.4132 24.1788 58.4878C24.3508 58.5624 24.5363 58.599 24.7231 58.5951C24.9649 58.5917 25.2037 58.5397 25.4258 58.4419C25.648 58.3441 25.8491 58.2026 26.0178 58.0253C26.1864 57.848 26.3192 57.6385 26.4087 57.4087C26.4982 57.1789 26.5425 56.9333 26.5392 56.686C26.545 56.2378 26.3795 55.805 26.078 55.4797C25.7765 55.1544 25.3628 54.9624 24.9249 54.9445C24.7606 54.94 24.6047 54.8692 24.4913 54.7476C24.3779 54.6259 24.3161 54.4633 24.3195 54.2953H24.5844C25.185 54.3155 25.7534 54.5785 26.1647 55.0266C26.5761 55.4748 26.7969 56.0715 26.7788 56.686C26.7788 59.4207 24.824 61.6351 22.4194 61.6351C21.9678 61.63 21.5216 61.534 21.1062 61.3526C20.6909 61.1712 20.3146 60.9078 19.9988 60.5776C19.683 60.2474 19.4338 59.8568 19.2656 59.4281C19.0974 58.9994 19.0134 58.541 19.0184 58.0791V50.2534C19.0184 49.9653 18.8755 49.8019 18.598 49.8019H18.0137V49.6643H18.7536C19.3043 49.6643 19.9643 49.4837 19.9643 48.8602V48.8H20.0694V58.0662C19.9888 58.2594 19.9459 58.4668 19.9433 58.6768C19.9738 59.3741 20.2732 60.0307 20.7758 60.5029C21.2784 60.9751 21.9434 61.2245 22.6253 61.1965C24.5549 61.1965 26.1692 59.683 26.5686 57.6577C26.4041 58.017 26.1434 58.3211 25.8168 58.535C25.4901 58.7488 25.1109 58.8636 24.7231 58.866C23.2896 58.866 22.3311 58.006 22.3311 56.7161V50.2534Z" fill="#1A171C"></path><path d="M36.6579 61.7773V60.7195C36.6579 60.3411 36.4141 59.9756 36.1156 59.9756C36.0399 59.981 35.9661 60.003 35.8994 60.0401C35.8327 60.0772 35.7745 60.1285 35.7289 60.1906C35.4323 60.5423 35.0642 60.8234 34.6503 61.0143C34.2364 61.2052 33.7867 61.3012 33.3327 61.2957C30.68 61.2957 28.9102 59.0555 28.9102 55.7059C28.9102 52.6573 30.9743 50.1806 33.5344 50.1806C34.4445 50.1663 35.3256 50.5077 35.9979 51.1351C36.0705 51.2165 36.1212 51.3158 36.1451 51.4232H36.1997C36.1703 51.3096 36.1561 51.1925 36.1577 51.0749L36.0904 49.6001H36.2249L36.4393 54.2654H36.2123L36.1451 53.2507C36.1406 52.506 35.848 51.7934 35.3312 51.2688C34.8143 50.7442 34.1154 50.4503 33.3873 50.4515C31.4031 50.4515 30.0788 52.4552 30.0788 55.4608C30.0788 58.5352 31.5628 61.0291 33.3873 61.0291C33.8445 61.0308 34.2953 60.9191 34.7009 60.7034C35.1066 60.4877 35.455 60.1745 35.7163 59.7907V57.8085C35.7327 57.6293 35.7123 57.4485 35.6563 57.2778C35.6003 57.1071 35.51 56.9503 35.3912 56.8175C35.2724 56.6847 35.1278 56.5787 34.9665 56.5065C34.8053 56.4343 34.6311 56.3974 34.4551 56.3982H32.9039V56.1273H37.9191V56.3982H36.7756V61.7859L36.6579 61.7773Z" fill="#1A171C"></path><path d="M40.5598 50.2534C40.5598 49.9653 40.4168 49.8019 40.1394 49.8019H39.5088V49.6643H40.2739C40.8246 49.6643 41.4846 49.4837 41.4846 48.8602V48.8H41.5939V59.4551C41.5136 59.6498 41.4708 59.8586 41.4678 60.07C41.4654 60.3101 41.5545 60.5417 41.7161 60.7158C41.8777 60.89 42.0993 60.993 42.3338 61.003C42.4444 61.0025 42.5536 60.9782 42.6544 60.9318C42.7552 60.8853 42.8453 60.8178 42.919 60.7335C42.9927 60.6492 43.0483 60.55 43.0822 60.4424C43.1161 60.3348 43.1275 60.2211 43.1157 60.1086C43.1151 59.9633 43.0953 59.8186 43.0569 59.6787L43.1662 59.6185C43.2103 59.7824 43.2329 59.9515 43.2334 60.1215C43.2484 60.2946 43.2273 60.4689 43.1714 60.633C43.1156 60.797 43.0262 60.947 42.9093 61.0731C42.7925 61.1991 42.6507 61.2983 42.4935 61.3641C42.3363 61.4298 42.1672 61.4607 41.9975 61.4545C41.2114 61.4545 40.5472 60.573 40.5472 59.4852L40.5598 50.2534Z" fill="#1A171C"></path><path d="M45.1838 56.5707C45.1788 55.9752 45.2886 55.3845 45.5069 54.8324C45.7253 54.2804 46.0478 53.7777 46.4562 53.3532C46.8646 52.9287 47.3508 52.5907 47.887 52.3585C48.4231 52.1263 48.9988 52.0045 49.581 52C52.2295 52 53.9909 53.8274 53.9909 56.5707C53.9999 57.7769 53.5406 58.9375 52.7138 59.7977C51.887 60.6578 50.7603 61.1473 49.581 61.1587C46.9578 61.1759 45.1838 59.3398 45.1838 56.5707ZM52.8222 56.8588C52.8222 54.3262 51.3467 52.2709 49.5264 52.2709C47.622 52.2709 46.3524 53.8833 46.3524 56.2998C46.3524 58.8282 47.8154 60.8835 49.6231 60.8835C51.5569 60.9007 52.8391 59.2925 52.8391 56.876L52.8222 56.8588Z" fill="#1A171C"></path><path d="M71.8537 51.0621C70.1931 51.0621 67.8978 51.8876 66.2877 52.1241C66.6193 52.2368 66.9061 52.4566 67.1048 52.7506C67.3035 53.0446 67.4033 53.3967 67.3891 53.7538C67.3827 54.0303 67.3301 54.3037 67.2336 54.5622L64.9425 60.8743L64.19 60.9474L62.2057 53.5044L60.2341 60.8872L59.4816 60.9474L56.8037 52.9712C56.5641 52.2445 56.4842 52.0338 56.026 52.0338H55.8242V51.8962H57.7958V52.1069C57.7989 52.328 57.83 52.5477 57.8883 52.7605L60.15 59.2103C60.1964 59.3887 60.2232 59.5719 60.2299 59.7564H60.3644C60.3726 59.5711 60.4036 59.3876 60.4569 59.2103L62.1132 53.0185V52.9583C61.9241 52.2488 61.8022 52.0209 61.3187 52.0209H60.4779V51.8833H63.4921V52.0295H62.7144V52.0596C62.9036 52.1327 63.0633 52.4896 63.1348 52.7562L64.8584 59.206C64.911 59.389 64.9393 59.5785 64.9425 59.7693H65.1316C65.1385 59.5506 65.1841 59.335 65.2662 59.1329L66.9856 54.5149C67.0795 54.2696 67.1279 54.0086 67.1285 53.7452C67.1285 52.9153 66.6408 52.1843 65.7875 52.1843H65.5604V51.9134C67.0402 51.9134 69.6046 50.3999 71.4711 50.3999C73.8673 50.3999 75.4228 51.7457 75.4228 53.8957C75.4432 54.5086 75.2249 55.1047 74.8157 55.553C74.4066 56.0013 73.8402 56.2651 73.241 56.2864H72.9719C72.968 56.2037 72.9803 56.121 73.0081 56.0432C73.036 55.9654 73.0788 55.8941 73.1341 55.8336C73.1894 55.773 73.2559 55.7245 73.3299 55.6907C73.4039 55.657 73.4837 55.6387 73.5647 55.6371C73.9989 55.6193 74.4095 55.4303 74.7105 55.1097C75.0114 54.789 75.1793 54.3617 75.179 53.9172C75.1706 52.1542 73.8715 51.0621 71.8537 51.0621Z" fill="#1A171C"></path></svg>`);
 }
-const _sfc_setup$5 = _sfc_main$5.setup;
-_sfc_main$5.setup = (props, ctx) => {
+const _sfc_setup$6 = _sfc_main$6.setup;
+_sfc_main$6.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/svgs/LogoIcon.vue");
-  return _sfc_setup$5 ? _sfc_setup$5(props, ctx) : void 0;
+  return _sfc_setup$6 ? _sfc_setup$6(props, ctx) : void 0;
 };
-const __nuxt_component_1$1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["ssrRender", _sfc_ssrRender]]);
-const _sfc_main$4 = {
+const __nuxt_component_1$1 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["ssrRender", _sfc_ssrRender$1]]);
+const _sfc_main$5 = {
   __name: "MenuIcon",
   __ssrInlineRender: true,
   props: {
@@ -4925,13 +4912,13 @@ const _sfc_main$4 = {
     };
   }
 };
-const _sfc_setup$4 = _sfc_main$4.setup;
-_sfc_main$4.setup = (props, ctx) => {
+const _sfc_setup$5 = _sfc_main$5.setup;
+_sfc_main$5.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/svgs/MenuIcon.vue");
-  return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
+  return _sfc_setup$5 ? _sfc_setup$5(props, ctx) : void 0;
 };
-const __nuxt_component_2$1 = _sfc_main$4;
+const __nuxt_component_2$1 = _sfc_main$5;
 const homePage = {
   heroText: [
     "We are professional beauty salon in the heart of Orange county. We specialize in a wide range of face treatments and other complimentary beauty services.",
@@ -5819,7 +5806,7 @@ const data = {
   products,
   details
 };
-const _sfc_main$3 = {
+const _sfc_main$4 = {
   __name: "HeaderComp",
   __ssrInlineRender: true,
   setup(__props) {
@@ -5831,7 +5818,7 @@ const _sfc_main$3 = {
       document.body.classList.remove("modal");
     });
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_NuxtLink = __nuxt_component_0$1;
+      const _component_NuxtLink = __nuxt_component_1$2;
       const _component_SvgsLogoIcon = __nuxt_component_1$1;
       const _component_SvgsMenuIcon = __nuxt_component_2$1;
       _push(`<header${ssrRenderAttrs(mergeProps({
@@ -5896,13 +5883,13 @@ const _sfc_main$3 = {
     };
   }
 };
-const _sfc_setup$3 = _sfc_main$3.setup;
-_sfc_main$3.setup = (props, ctx) => {
+const _sfc_setup$4 = _sfc_main$4.setup;
+_sfc_main$4.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/HeaderComp.vue");
-  return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
+  return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
-const __nuxt_component_0 = _sfc_main$3;
+const __nuxt_component_0 = _sfc_main$4;
 const _wrapIf = (component, props, slots) => {
   props = props === true ? {} : props;
   return { default: () => {
@@ -5911,20 +5898,6 @@ const _wrapIf = (component, props, slots) => {
   } };
 };
 const layouts = {};
-const LayoutLoader = /* @__PURE__ */ defineComponent({
-  name: "LayoutLoader",
-  inheritAttrs: false,
-  props: {
-    name: String,
-    ...{}
-  },
-  async setup(props, context3) {
-    const LayoutComponent = await layouts[props.name]().then((r) => r.default || r);
-    return () => {
-      return h(LayoutComponent, context3.attrs, context3.slots);
-    };
-  }
-});
 const __nuxt_component_1 = /* @__PURE__ */ defineComponent({
   name: "NuxtLayout",
   inheritAttrs: false,
@@ -5935,20 +5908,63 @@ const __nuxt_component_1 = /* @__PURE__ */ defineComponent({
     }
   },
   setup(props, context3) {
-    const injectedRoute = inject("_route");
+    const nuxtApp = useNuxtApp();
+    const injectedRoute = inject(PageRouteSymbol);
     const route = injectedRoute === useRoute() ? useRoute$1() : injectedRoute;
     const layout = computed(() => unref(props.name) ?? route.meta.layout ?? "default");
+    const layoutRef = ref();
+    context3.expose({ layoutRef });
     return () => {
+      const done = nuxtApp.deferHydration();
       const hasLayout = layout.value && layout.value in layouts;
       const transitionProps = route.meta.layoutTransition ?? appLayoutTransition;
       return _wrapIf(Transition, hasLayout && transitionProps, {
-        default: () => _wrapIf(LayoutLoader, hasLayout && {
-          key: layout.value,
-          name: layout.value,
-          ...{},
-          ...context3.attrs
-        }, context3.slots).default()
+        default: () => h(Suspense, { suspensible: true, onResolve: () => {
+          nextTick(done);
+        } }, {
+          // @ts-expect-error seems to be an issue in vue types
+          default: () => h(LayoutProvider, {
+            layoutProps: mergeProps(context3.attrs, { ref: layoutRef }),
+            key: layout.value,
+            name: layout.value,
+            shouldProvide: !props.name,
+            hasTransition: !!transitionProps
+          }, context3.slots)
+        })
       }).default();
+    };
+  }
+});
+const LayoutProvider = /* @__PURE__ */ defineComponent({
+  name: "NuxtLayoutProvider",
+  inheritAttrs: false,
+  props: {
+    name: {
+      type: [String, Boolean]
+    },
+    layoutProps: {
+      type: Object
+    },
+    hasTransition: {
+      type: Boolean
+    },
+    shouldProvide: {
+      type: Boolean
+    }
+  },
+  setup(props, context3) {
+    const name = props.name;
+    if (props.shouldProvide) {
+      provide(LayoutMetaSymbol, {
+        isCurrent: (route) => name === (route.meta.layout ?? "default")
+      });
+    }
+    return () => {
+      var _a, _b;
+      if (!name || typeof name === "string" && !(name in layouts)) {
+        return (_b = (_a = context3.slots).default) == null ? void 0 : _b.call(_a);
+      }
+      return h(layouts[name], props.layoutProps, context3.slots);
     };
   }
 });
@@ -5969,6 +5985,36 @@ const generateRouteKey = (routeProps, override) => {
 const wrapInKeepAlive = (props, children) => {
   return { default: () => children };
 };
+const RouteProvider = /* @__PURE__ */ defineComponent({
+  name: "RouteProvider",
+  props: {
+    vnode: {
+      type: Object,
+      required: true
+    },
+    route: {
+      type: Object,
+      required: true
+    },
+    vnodeRef: Object,
+    renderKey: String,
+    trackRootNodes: Boolean
+  },
+  setup(props) {
+    const previousKey = props.renderKey;
+    const previousRoute = props.route;
+    const route = {};
+    for (const key in props.route) {
+      Object.defineProperty(route, key, {
+        get: () => previousKey === props.renderKey ? props.route[key] : previousRoute[key]
+      });
+    }
+    provide(PageRouteSymbol, shallowReactive(route));
+    return () => {
+      return h(props.vnode, { ref: props.vnodeRef });
+    };
+  }
+});
 const __nuxt_component_2 = /* @__PURE__ */ defineComponent({
   name: "NuxtPage",
   inheritAttrs: false,
@@ -5992,8 +6038,13 @@ const __nuxt_component_2 = /* @__PURE__ */ defineComponent({
       default: null
     }
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, expose }) {
     const nuxtApp = useNuxtApp();
+    const pageRef = ref();
+    inject(PageRouteSymbol, null);
+    expose({ pageRef });
+    inject(LayoutMetaSymbol, null);
+    let vnode;
     return () => {
       return h(RouterView, { name: props.name, route: props.route, ...attrs }, {
         default: (routeProps) => {
@@ -6011,7 +6062,7 @@ const __nuxt_component_2 = /* @__PURE__ */ defineComponent({
               nuxtApp.callHook("page:transition:finish", routeProps.Component);
             } }
           ].filter(Boolean));
-          return _wrapIf(
+          vnode = _wrapIf(
             Transition,
             hasTransition && transitionProps,
             wrapInKeepAlive(
@@ -6022,9 +6073,20 @@ const __nuxt_component_2 = /* @__PURE__ */ defineComponent({
                 onResolve: () => {
                   nextTick(() => nuxtApp.callHook("page:finish", routeProps.Component).finally(done));
                 }
-              }, { default: () => h(RouteProvider, { key, routeProps, pageKey: key, hasTransition }) })
+              }, {
+                // @ts-expect-error seems to be an issue in vue types
+                default: () => h(RouteProvider, {
+                  key,
+                  vnode: routeProps.Component,
+                  route: routeProps.route,
+                  renderKey: key,
+                  trackRootNodes: hasTransition,
+                  vnodeRef: pageRef
+                })
+              })
             )
           ).default();
+          return vnode;
         }
       });
     };
@@ -6040,25 +6102,7 @@ function _mergeTransitionProps(routeProps) {
   }));
   return defu(..._props);
 }
-const RouteProvider = /* @__PURE__ */ defineComponent({
-  name: "RouteProvider",
-  // TODO: Type props
-  // eslint-disable-next-line vue/require-prop-types
-  props: ["routeProps", "pageKey", "hasTransition"],
-  setup(props) {
-    const previousKey = props.pageKey;
-    const previousRoute = props.routeProps.route;
-    const route = {};
-    for (const key in props.routeProps.route) {
-      route[key] = computed(() => previousKey === props.pageKey ? props.routeProps.route[key] : previousRoute[key]);
-    }
-    provide("_route", reactive(route));
-    return () => {
-      return h(props.routeProps.Component);
-    };
-  }
-});
-const _sfc_main$2 = {
+const _sfc_main$3 = {
   __name: "FooterComp",
   __ssrInlineRender: true,
   setup(__props) {
@@ -6070,13 +6114,13 @@ const _sfc_main$2 = {
     };
   }
 };
-const _sfc_setup$2 = _sfc_main$2.setup;
-_sfc_main$2.setup = (props, ctx) => {
+const _sfc_setup$3 = _sfc_main$3.setup;
+_sfc_main$3.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/FooterComp.vue");
-  return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
+  return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const __nuxt_component_3 = _sfc_main$2;
+const __nuxt_component_3 = _sfc_main$3;
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -6918,22 +6962,22 @@ var gsap$1, _coreInitted, _win, _doc, _docEl$1, _body$1, _root, _resizeDelay, _t
   }
 }, _capsExp = /([A-Z])/g, _setState = function _setState2(state) {
   if (state) {
-    var style2 = state.t.style, l = state.length, i = 0, p, value;
+    var style = state.t.style, l = state.length, i = 0, p, value;
     (state.t._gsap || gsap$1.core.getCache(state.t)).uncache = 1;
     for (; i < l; i += 2) {
       value = state[i + 1];
       p = state[i];
       if (value) {
-        style2[p] = value;
-      } else if (style2[p]) {
-        style2.removeProperty(p.replace(_capsExp, "-$1").toLowerCase());
+        style[p] = value;
+      } else if (style[p]) {
+        style.removeProperty(p.replace(_capsExp, "-$1").toLowerCase());
       }
     }
   }
 }, _getState = function _getState2(element) {
-  var l = _stateProps.length, style2 = element.style, state = [], i = 0;
+  var l = _stateProps.length, style = element.style, state = [], i = 0;
   for (; i < l; i++) {
-    state.push(_stateProps[i], style2[_stateProps[i]]);
+    state.push(_stateProps[i], style[_stateProps[i]]);
   }
   state.t = element;
   return state;
@@ -7000,19 +7044,19 @@ var gsap$1, _coreInitted, _win, _doc, _docEl$1, _body$1, _root, _resizeDelay, _t
   return containerAnimation ? value : Math.round(value);
 }, _prefixExp = /(webkit|moz|length|cssText|inset)/i, _reparent = function _reparent2(element, parent, top, left) {
   if (element.parentNode !== parent) {
-    var style2 = element.style, p, cs;
+    var style = element.style, p, cs;
     if (parent === _body$1) {
-      element._stOrig = style2.cssText;
+      element._stOrig = style.cssText;
       cs = _getComputedStyle(element);
       for (p in cs) {
-        if (!+p && !_prefixExp.test(p) && cs[p] && typeof style2[p] === "string" && p !== "0") {
-          style2[p] = cs[p];
+        if (!+p && !_prefixExp.test(p) && cs[p] && typeof style[p] === "string" && p !== "0") {
+          style[p] = cs[p];
         }
       }
-      style2.top = top;
-      style2.left = left;
+      style.top = top;
+      style.left = left;
     } else {
-      style2.cssText = element._stOrig;
+      style.cssText = element._stOrig;
     }
     gsap$1.core.getCache(element).uncache = 1;
     parent.appendChild(element);
@@ -8394,7 +8438,7 @@ ScrollToPlugin.max = _max;
 ScrollToPlugin.getOffset = _getOffset;
 ScrollToPlugin.buildGetter = _buildGetter;
 _getGSAP3() && gsap.registerPlugin(ScrollToPlugin);
-const _sfc_main$1 = {
+const _sfc_main$2 = {
   __name: "app",
   __ssrInlineRender: true,
   setup(__props) {
@@ -8437,24 +8481,51 @@ const _sfc_main$1 = {
     };
   }
 };
+const _sfc_setup$2 = _sfc_main$2.setup;
+_sfc_main$2.setup = (props, ctx) => {
+  const ssrContext = useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("app.vue");
+  return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
+};
+const AppComponent = _sfc_main$2;
+const _sfc_main$1 = {};
+function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
+  const _component_NuxtLink = __nuxt_component_1$2;
+  _push(`<main${ssrRenderAttrs(mergeProps({ class: "bg_gradient h__100" }, _attrs))}><div class="container"><div class="error_container flow pblock__xl"><h1 class="fw__300 font_capital text__primary">No page found...</h1>`);
+  _push(ssrRenderComponent(_component_NuxtLink, {
+    class: "btn btn_square btn_bg",
+    to: "/"
+  }, {
+    default: withCtx((_, _push2, _parent2, _scopeId) => {
+      if (_push2) {
+        _push2(`Go to home page`);
+      } else {
+        return [
+          createTextVNode("Go to home page")
+        ];
+      }
+    }),
+    _: 1
+  }, _parent));
+  _push(`</div></div></main>`);
+}
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("app.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("error.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
-const AppComponent = _sfc_main$1;
+const ErrorComponent = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["ssrRender", _sfc_ssrRender]]);
 const _sfc_main = {
   __name: "nuxt-root",
   __ssrInlineRender: true,
   setup(__props) {
-    const ErrorComponent = /* @__PURE__ */ defineAsyncComponent(() => import("./_nuxt/error-component-a4a4e7bc.js").then((r) => r.default || r));
-    const IslandRenderer = /* @__PURE__ */ defineAsyncComponent(() => import("./_nuxt/island-renderer-f3a3bdbd.js").then((r) => r.default || r));
+    const IslandRenderer = /* @__PURE__ */ defineAsyncComponent(() => import("./_nuxt/island-renderer-c2aa00a2.js").then((r) => r.default || r));
     const nuxtApp = useNuxtApp();
     nuxtApp.deferHydration();
     nuxtApp.ssrContext.url;
     const SingleRenderer = false;
-    provide("_route", useRoute());
+    provide(PageRouteSymbol, useRoute());
     nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), "vue:setup");
     const error = useError();
     onErrorCaptured((err, target, info) => {
@@ -8497,7 +8568,6 @@ if (!globalThis.$fetch) {
   });
 }
 let entry;
-const plugins = normalizePlugins(_plugins);
 {
   entry = async function createNuxtAppServer(ssrContext) {
     const vueApp = createApp(RootComponent);
@@ -8509,17 +8579,20 @@ const plugins = normalizePlugins(_plugins);
       await nuxt.hooks.callHook("app:error", err);
       nuxt.payload.error = nuxt.payload.error || err;
     }
+    if (ssrContext == null ? void 0 : ssrContext._renderResponse) {
+      throw new Error("skipping render");
+    }
     return vueApp;
   };
 }
 const entry$1 = (ctx) => entry(ctx);
 export {
   ScrollTrigger$1 as S,
-  _export_sfc as _,
-  __nuxt_component_0$1 as a,
-  useHead as b,
+  __nuxt_component_1$2 as _,
+  useHead as a,
+  useRoute as b,
   createError as c,
-  useRoute as d,
+  _export_sfc as d,
   entry$1 as default,
   useNuxtApp as e,
   useRuntimeConfig as f,

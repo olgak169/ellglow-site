@@ -9,7 +9,6 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/styles/style.scss'],
   modules: ['@nuxt/image'],
-
   build: {
     transpile: ['gsap'],
   },
